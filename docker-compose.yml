@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: locadora_db
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: locadora
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+    networks:
+      - locadora_net
+      
+volumes:
+  db_data:
+
+networks:
+  locadora_net:
+    driver: bridge
