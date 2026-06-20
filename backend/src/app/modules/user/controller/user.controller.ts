@@ -5,21 +5,24 @@ import Method from "../../../../core/enums/method.enum.js";
 import Controller from "../../../../core/decorators/controller.decorator.js";
 import UserService from "../service/user.service.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
-import BaseController from "../../../../core/http/base.controller.js";
-import { AppError } from "../../../../core/errors/app-error.js";
+import { createUserValidator } from "../validator/create-user.validator.js";
+import { create } from "node:domain";
+import { createUserTransformer } from "../transformer/create-user.transformer.js";
 import Status from "../../../../core/enums/status.enum.js";
-import { cp } from "node:fs";
+import { authGuard } from "../../../guard/auth.guard.js";
+import roleGuard from "../../../guard/role.guard.js";
 
-@Controller
-export default class UserController extends BaseController {
-
-    protected static override readonly __name__: Readonly<string> = "user";
+@Controller("/user")
+export default class UserController {
 
     public constructor(
-        private service = new UserService()
-    ) { super() };
+        private readonly service = new UserService()
+    ) {};
 
-    @Route("/getAll", Method.GET, [])
+    @Route("/all", Method.GET, [
+        authGuard,
+        roleGuard("ADMIN")
+    ])
     public async getAll(
         _request: Request, 
         response: Response
@@ -35,7 +38,10 @@ export default class UserController extends BaseController {
 
     };
 
-    @Route("/create", Method.POST, [])
+    @Route("/create", Method.POST, [
+        createUserTransformer,
+        createUserValidator
+    ])
     public async create(
         request: Request, 
         response: Response
@@ -58,5 +64,46 @@ export default class UserController extends BaseController {
         );
 
     };
+
+    @Route("/me", Method.GET, [
+        authGuard
+    ])
+    public async me(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        const { user } = request;
+
+        if(!user)
+            return HTTPResponse.fail(
+                response,
+                "Usuário não encontrado",
+                Status.UNAUTHORIZED
+            );
+
+        return HTTPResponse.ok(
+            response,
+            "USER_FOUND_SUCCESSFULLY",
+            user
+        );
+
+    };
+
+    @Route("/update/:id", Method.PUT, [
+        authGuard
+    ])
+    public async update(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        
+
+        return HTTPResponse.ok(
+            
+        )
+
+    }
 
 };

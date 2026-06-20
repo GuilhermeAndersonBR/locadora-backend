@@ -1,0 +1,9 @@
+{
+    "GENERIC_LOG": "{0}",
+    "PORT_LOG": "Server running on port {0}",
+    "ERROR_LOG": "Error: {0}",
+    "REGISTERING_ROUTE": "Registering route {0}",
+    "MODIFYING_ROUTE": "Modifying route {0}",
+    "MODIFYING_CONTROLLER": "Modifying controller {0}",
+    "CRITICAL_ERROR": "A critical error has occurred: {0}"
+}

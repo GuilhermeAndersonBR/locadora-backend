@@ -1,4 +1,6 @@
+import Log from "../messages/log.js";
 import { Route } from "../types/route.type.js";
+import logMessage from "../../../data/logMessage.json" with { type: "json"};
 
 export default class RouteRegistry {
 

@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from "../errors/app-error.js";
 import HTTPResponse from "../http/httpResponse.js";
 import Status from "../enums/status.enum.js";
+import Log from "../messages/log.js";
+import logMessage from "../../../data/logMessage.json" with { type: "json"}; 
 
 export function errorHandler(
     error: any,
@@ -13,17 +15,18 @@ export function errorHandler(
     if (error instanceof AppError) return HTTPResponse.fail(
         response, 
         error.message, 
-        error.statusCode as Status, 
-        error.code
+        error.statusCode as Status
     );
 
-    console.error(error);
+    Log.error(
+        logMessage.CRITICAL_ERROR,
+        error
+    );
 
     return HTTPResponse.fail(
         response, 
-        "Internal server error", 
-        Status.INTERNAL_SERVER_ERROR,
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR", 
+        Status.INTERNAL_SERVER_ERROR
     );
 
 };

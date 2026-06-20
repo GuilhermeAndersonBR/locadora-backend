@@ -23,7 +23,6 @@ export default class CreateUserPolicy {
 
         if(userByEmail.length !== 0) 
             throw new ConflictError(
-                "Já existe um usuário com o email informado",
                 "EMAIL_ALREADY_EXISTS"
             );
 
@@ -33,7 +32,6 @@ export default class CreateUserPolicy {
 
         if(userByCPF.length !== 0) 
             throw new ConflictError(
-                "Já existe um usuário com o CPF informado",
                 "CPF_ALREADY_EXISTS"
             );
 

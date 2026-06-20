@@ -1,0 +1,6 @@
+{
+    "LOGIN_SUCCESSFULLY": "Login successfully",
+    "USER_NOT_FOUND": "User not found",
+    "USER_NOT_AUTHORIZED": "User not authorized",
+    "INTERNAL_SERVER_ERROR": "Internal server error"
+}

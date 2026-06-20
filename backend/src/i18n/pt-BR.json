@@ -1,0 +1,6 @@
+{
+    "USER_NOT_FOUND": "Usuário nao encontrado",
+    "USER_NOT_AUTHORIZED": "Usuário nao autorizado",
+    "INTERNAL_SERVER_ERROR": "Erro interno do servidor",
+    "LOGIN_SUCCESSFULLY": "Login realizado com sucesso"
+}

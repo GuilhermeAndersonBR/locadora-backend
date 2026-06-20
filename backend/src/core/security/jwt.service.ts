@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
+dotenv.config();
 export interface TokenPayload {
     id: number,
     role: string
@@ -27,6 +29,8 @@ export default abstract class JWTService {
     public static verify(
         token: string
     ): TokenPayload {
+
+        console.log(token);
 
         return jwt.verify(
             token, 

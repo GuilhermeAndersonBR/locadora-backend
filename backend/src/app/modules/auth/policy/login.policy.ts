@@ -22,7 +22,6 @@ export default class LoginPolicy {
 
         if(!userByEmail) 
             throw new UnauthorizedError(
-                "Credenciais inválidas",
                 "INVALID_CREDENTIALS"
             );
 
@@ -32,7 +31,6 @@ export default class LoginPolicy {
 
         if(!valid)
             throw new UnauthorizedError(
-                "Credenciais inválidas",
                 "INVALID_CREDENTIALS"
             );
 

@@ -1,21 +1,23 @@
 import { Request, Response } from "express";
 import Controller from "../../../../core/decorators/controller.decorator.js";
 import Route from "../../../../core/decorators/route.decorator.js";
-import BaseController from "../../../../core/http/base.controller.js";
 import Method from "../../../../core/enums/method.enum.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
 import AuthService from "../service/auth.service.js";
+import { loginTransformer } from "../transformer/login.transformer.js";
+import { loginValidator } from "../validator/login.validator.js";
 
-@Controller
-export default class AuthController extends BaseController {
-
-    protected static override readonly __name__: Readonly<string> = "auth";
+@Controller("/auth")
+export default class AuthController {
 
     public constructor(
         private service = new AuthService()
-    ) { super() };
+    ) {};
 
-    @Route("/login", Method.POST, [])
+    @Route("/login", Method.POST, [
+        loginTransformer,
+        loginValidator
+    ])
     public async login(
         request: Request, 
         response: Response
@@ -30,7 +32,7 @@ export default class AuthController extends BaseController {
 
         return HTTPResponse.ok(
             response,
-            "Login efetuado com sucesso",
+            "LOGIN_SUCCESSFULLY",
             { token }
         );
 

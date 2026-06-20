@@ -6,6 +6,8 @@ declare global {
 
         interface Request {
 
+            language: string;
+
             user?: {
 
                 id: number;

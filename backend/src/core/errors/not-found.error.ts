@@ -4,12 +4,10 @@ import { AppError } from "./app-error.js";
 export default class NotFoundError extends AppError {
     
     public constructor(
-        message: string,
         code?: string
     ) {
         
         super(
-            message, 
             Status.NOT_FOUND, 
             code
         );

@@ -4,6 +4,9 @@ import ControllerRegistry from "../registry/controller.registry.js";
 import ModuleRegistry from "../registry/module.registry.js";
 import { wrap } from "./wrap-handler.js";
 import { errorHandler } from "../middleware/error-handle.middleware.js";
+import Path from "../routes/path.js";
+import Log from "../messages/log.js";
+import { languageMiddleware } from "../middleware/language.middleware.js";
 
 export async function bootstrapRoutes(app: Express): Promise<void> {
 
@@ -15,14 +18,28 @@ export async function bootstrapRoutes(app: Express): Promise<void> {
 
         const { path, controller, handler, method, middlewares  } = route;
 
+        Log.info(
+            "Instancing controller: {0}",
+            controller.name
+        );
+
         const instance = ControllerRegistry.get(controller);
 
         if(!instance) return;
 
         const handlerBind = handler.bind(instance);
 
+        const completePath = 
+            `${instance.constructor.__path__}${path}`;
+
+        Log.info(
+            "Defining route: {0}",
+            completePath
+        );
+
         app[method](
-            path, 
+            completePath, 
+            languageMiddleware,
             ...middlewares,
             wrap(handlerBind)
         );

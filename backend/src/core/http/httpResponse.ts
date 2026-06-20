@@ -1,24 +1,46 @@
 import { Response } from "express";
 import Status from "../enums/status.enum.js";
 import { QueryResult } from "mysql2";
+import TranslationService from "../security/translation.service.js";
 
-type Data = Record<string, unknown> | QueryResult; 
+type Data = Record<string, unknown> | QueryResult | null; 
 
 export default abstract class HTTPResponse {
     
+    private static response<T extends Data>(
+        response: Response,
+        messageKey: string,
+        data: T,
+        status: Status,
+        success: boolean
+    ): Response {
+
+        const language = response.req.language;
+
+        return response.status(status).json({
+            success,
+            message: TranslationService.translate(
+                messageKey, 
+                language
+            ),
+            data
+        });
+
+    };
+
     public static ok<T extends Data>(
         response: Response, 
         message: string,
-        data: T, 
-        status: Status = Status.OK
+        data: T
     ): Response {
         
-        return response.status(status).json({
-            success: true,
+        return this.response<T>(
+            response,
             message,
             data,
-            error: null
-        });
+            Status.OK,
+            true
+        );
     
     };
 
@@ -28,12 +50,13 @@ export default abstract class HTTPResponse {
         data: T
     ): Response {
         
-        return response.status(Status.CREATED).json({
-            success: true,
+        return this.response<T>(
+            response,
             message,
             data,
-            error: null
-        });
+            Status.CREATED,
+            true
+        );
     
     };
 
@@ -41,14 +64,15 @@ export default abstract class HTTPResponse {
         response: Response,
         message: string,
         status: Status = Status.BAD_REQUEST,
-        code: string
     ): Response {
 
-        return response.status(status).json({
-            success: false,
+        return this.response(
+            response,
             message,
-            code
-        });
+            null,
+            status,
+            false
+        );
     
     };
 
