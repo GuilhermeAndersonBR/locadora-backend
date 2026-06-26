@@ -1,69 +1,262 @@
-import { QueryResult } from "mysql2";
-import PasswordService from "../../../../core/security/password.service.js";
+import { ResultSetHeader } from "mysql2";
+import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import { db } from "../../../config/database.js";
-import CreateUserDTO from "../dto/create-user.dto.js";
+import CreateUserSchema from "../schema/create-user.schema.js";
+import Role from "../types/role.type.js";
+import { UserRow } from "../types/user.row.js";
+import UpdateUserSchema from "../schema/update-user.schema.js";
+import UpdatePasswordUserSchema from "../schema/update-password-schema.js";
+import UpdateUserRoleSchema from "../schema/update-role.schema.js";
+import DeleteUserSchema from "../schema/delete-user.schema.js";
+import { DBExecutor } from "../../../../core/types/db-executor.type.js";
+import { getExecutor } from "../../../../core/config/executor.config.js";
 
 export default class UserRepository {
 
-    public async getAll(): Promise<QueryResult> {
+    public static async getAll(
 
-        const [ rows ] = await db.query("SELECT * FROM users");
+    ): Promise<Array<UserRow>> {
 
-        return rows;
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            Array<UserRow>
+        >(
+            `
+            SELECT 
+                id, name, email, role
+            FROM users
+            WHERE deleted_at IS NULL
+            `,
+            []
+        );
+
+        return result;
 
     };
 
-    public async findByEmail(
+    public static async create(
+        data: TypedBody<typeof CreateUserSchema> & {
+            role: Role
+        }
+    ): Promise<number> {
+
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            ResultSetHeader
+        >(
+            `
+            INSERT INTO users
+            (name, email, cpf, password_hash, role)
+            VALUES (?, ?, ?, ?, ?)
+            `,
+            [
+                data.name,
+                data.email,
+                data.cpf,
+                data.password,
+                data.role
+            ]
+        );
+
+        return result.insertId;
+
+    };
+
+    public static async getById(
+        id: number
+    ): Promise<UserRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            Array<UserRow>
+        >(
+            `
+            SELECT *
+            FROM users
+            WHERE id = ?
+            AND deleted_at IS NULL
+            LIMIT 1
+            `,
+            [
+                id
+            ]
+        );
+
+        return result[0] ?? null;
+
+    };
+
+    public static async getByEmail(
         email: string
-    ): Promise<QueryResult> {
-        
-        const [ rows ] = await db.query(
-            "SELECT * FROM users WHERE email = ?", 
-            [ email ]
+    ): Promise<UserRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            Array<UserRow>
+        >(
+            `
+            SELECT *
+            FROM users
+            WHERE email = ?
+            AND deleted_at IS NULL
+            LIMIT 1
+            `,
+            [
+                email
+            ]
         );
 
-        return rows;
+        return result[0] ?? null;
 
     };
 
-    public async findByCPF(
+    public static async getByCPF(
         cpf: string
-    ): Promise<QueryResult> {
+    ): Promise<UserRow | null> {
+
+        const executor = getExecutor();
         
-        const [ rows ] = await db.query(
-            "SELECT * FROM users WHERE cpf = ?", 
-            [ cpf ]
+        const [ result ] = await executor.execute<
+            Array<UserRow>
+        >(
+            `
+            SELECT *
+            FROM users
+            WHERE cpf = ?
+            AND deleted_at IS NULL
+            LIMIT 1
+            `,
+            [
+                cpf
+            ]
         );
 
-        return rows;
+        return result[0] ?? null;
 
     };
 
-    public async create(
-        data: CreateUserDTO
-    ): Promise<Record<string, unknown>> {
+    public static async update(
+        data: TypedBody<typeof UpdateUserSchema> & {
+            id: number
+        }
+    ): Promise<void> {
 
-        const { name, cpf, email, password, role } = data;
+        const executor = getExecutor();
 
-        console.log(
-            name, 
-            cpf,
-            email, 
-            password, 
-            role
-        );
+        const fields: Array<string> = [];
 
-        const [ result ]: any = await db.query(
-            "INSERT INTO users (name, cpf, email, password_hash, role) VALUES (?, ?, ?, ?, ?)", 
-            [ name, cpf, email, password, role ]
-        );
+        const values: Array<unknown> = [];
 
-        return {
-            id: result.insertId,
-            name,
-            email
+        if (data.name !== undefined) {
+
+            fields.push("name = ?");
+
+            values.push(data.name);
+
         };
 
+        if (data.email !== undefined) {
+
+            fields.push("email = ?");
+
+            values.push(data.email);
+
+        };
+
+        if (data.cpf !== undefined) {
+
+            fields.push("cpf = ?");
+
+            values.push(data.cpf);
+
+        };
+
+        values.push(data.id);
+
+        await executor.query(
+            `
+            UPDATE users
+            SET
+                ${fields.join(", ")},
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            values
+        );
+
+    };
+
+    public static async updatePassword(
+        data: TypedBody<typeof UpdatePasswordUserSchema> & {
+            id: number
+        }
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE users
+            SET
+                password_hash = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
+                data.newPassword,
+                data.id
+            ]
+        );
+
+    };
+
+    public static async updateRole(
+        data: TypedBody<typeof UpdateUserRoleSchema> & {
+            id: number
+        }
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE users
+            SET
+                role = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
+                data.newRole,
+                data.id
+            ]
+        );
+
+    };
+
+    public static async delete(
+        data: TypedBody<typeof DeleteUserSchema> & {
+            id: number
+        }
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE users
+            SET
+                deleted_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
+                data.id
+            ]
+        );
 
     };
 

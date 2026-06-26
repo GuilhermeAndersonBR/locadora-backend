@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { MiddlewareHandler } from "../types/middleware-handler.type.js";
+import { MiddlewareHandler } from "../types/middleware/middleware-handler.type.js";
 
 export const languageMiddleware: MiddlewareHandler = (
     request: Request,

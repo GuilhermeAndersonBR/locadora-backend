@@ -12,6 +12,6 @@ export default class ConflictError extends AppError {
             code
         );
         
-    }
+    };
 
-}
+};

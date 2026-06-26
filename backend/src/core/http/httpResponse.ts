@@ -1,9 +1,9 @@
 import { Response } from "express";
 import Status from "../enums/status.enum.js";
 import { QueryResult } from "mysql2";
-import TranslationService from "../security/translation.service.js";
+import TranslationService from "../services/translation.service.js";
 
-type Data = Record<string, unknown> | QueryResult | null; 
+type Data = unknown | null; 
 
 export default abstract class HTTPResponse {
     

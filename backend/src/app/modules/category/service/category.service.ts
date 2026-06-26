@@ -1,28 +1,71 @@
-import { CreateCategoryDTO } from "../dto/create-category.dto.js";
+import NotFoundError from "../../../../core/errors/not-found.error.js";
+import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import CategoryRepository from "../repository/category.repository.js";
-import CreateCategoryValidator from "../validators/create-category.validator.js";
+import CreateCategorySchema from "../schema/create-category.schema.js";
+import { UpdateCategorySchema } from "../schema/update-category.schema.js";
 
-export default class CategoryService {
+export default abstract class CategoryService {
 
-    public constructor(
-        private readonly repository = new CategoryRepository(),
-        private readonly validator = new CreateCategoryValidator(),
-    ) {};
+    public static async getAll(
 
-    public async getAll() {
-        return this.repository.getAll();
+    ): Promise<Record<string, any>> {
+
+        const categories = await CategoryRepository.getAll();
+
+        return categories;
+
     };
 
-    public async create(data: CreateCategoryDTO) {
+    public static async create(
+        data: TypedBody<typeof CreateCategorySchema>
+    ): Promise<Record<string, any>> {
 
-        const { name, description } = this.validator.validate(data);
+        const categoryId = await CategoryRepository.create(
+            data
+        );
 
-        const category = await this.repository.create({
-            name,
-            description
-        });
+        return {
+            id: categoryId
+        };
 
-        return category;
+    };
+
+    public static async update(
+        data: TypedBody<typeof UpdateCategorySchema> & {
+            id: number
+        }
+    ): Promise<Record<string, any>> {
+
+        const category = await CategoryRepository.findById(
+            data.id
+        );
+        
+        await CategoryRepository.update(
+            data
+        );
+
+        return {};
+
+    };
+
+    public static async delete(
+        id: number
+    ): Promise<Record<string, any>> {
+
+        const category = await CategoryRepository.findById(
+            id
+        );
+
+        if(!category)
+            throw new NotFoundError(
+                "CATEGORY_NOT_FOUND"
+            );
+
+        await CategoryRepository.delete(
+            id
+        );
+
+        return {};
 
     };
 

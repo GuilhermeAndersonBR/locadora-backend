@@ -1,5 +1,5 @@
 import Methods from "../enums/method.enum.js";
-import { MiddlewareHandler } from "../types/middleware-handler.type.js";
+import { MiddlewareHandler } from "../types/middleware/middleware-handler.type.js";
 import RouteRegistry from "../registry/route.registry.js";
 import Path from "../routes/path.js";
 import Log from "../messages/log.js";

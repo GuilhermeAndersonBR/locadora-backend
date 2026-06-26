@@ -1,28 +1,40 @@
-import JWTService from "../../../../core/security/jwt.service.js";
+import NotFoundError from "../../../../core/errors/not-found.error.js";
+import UnauthorizedError from "../../../../core/errors/unauthorized.error.js";
+import JWTService from "../../../../core/services/jwt.service.js";
+import PasswordService from "../../../../core/services/password.service.js";
+import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import UserRepository from "../../user/repository/user.repository.js";
-import { LoginDTO } from "../dto/login.dto.js";
-import LoginPolicy from "../policy/login.policy.js";
+import LoginSchema from "../schema/login.schema.js";
 
 export default class AuthService {
 
-    private readonly policy: LoginPolicy;
-    
-    public constructor(
-        private readonly repository = new UserRepository(),
-    ) {
-        this.policy = new LoginPolicy(this.repository);
-    };
+    public static async login(
+        data: TypedBody<typeof LoginSchema>
+    ): Promise<Record<string, any>> {
 
-    public async login(
-        data: LoginDTO
-    ): Promise<string> {
+        const user = await UserRepository.getByEmail(
+            data.email
+        );
 
-        const user = await this.policy.validate(data);
+        if(!user)
+            throw new NotFoundError("USER_NOT_FOUND");
 
-        return JWTService.sign({
+        if(!await PasswordService.verify(
+            data.password,
+            user.password_hash
+        ))
+            throw new UnauthorizedError(
+                "INVALID_PASSWORD"
+            );
+
+        const token = JWTService.sign({
             id: user.id,
             role: user.role
         });
+
+        return {
+            token
+        };
 
     };
 

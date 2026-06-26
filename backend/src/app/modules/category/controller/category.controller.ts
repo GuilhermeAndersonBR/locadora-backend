@@ -3,52 +3,92 @@ import Controller from "../../../../core/decorators/controller.decorator.js";
 import Route from "../../../../core/decorators/route.decorator.js";
 import Method from "../../../../core/enums/method.enum.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
+import { authGuard } from "../../../guard/auth.guard.js";
+import roleGuard from "../../../guard/role.guard.js";
+import Role from "../../user/types/role.type.js";
+import { TypedRequest } from "../../../../core/types/typed-request.type.js";
+import CreateCategorySchema from "../schema/create-category.schema.js";
 import CategoryService from "../service/category.service.js";
-import { CreateCategoryDTO } from "../dto/create-category.dto.js";
 
 @Controller("/category")
 export default class CategoryController {
-    
-    public constructor(
-        private readonly service = new CategoryService()
-    ) {};
 
-    @Route("/all", Method.GET, [])
+    @Route("/", Method.GET, [])
     public async getAll(
-        _request: Request, 
-        response: Response
-    ): Promise<Response> {
-
-        return HTTPResponse.ok(
-            response,
-            "CATEGORIES_FOUND_SUCCESSFULLY",
-            {}
-        );
-
-    };
-
-    @Route("/create", Method.POST, [])
-    public async create(
         request: Request, 
         response: Response
     ): Promise<Response> {
 
-        console.log(request.language);
+        const data = await CategoryService.getAll();
 
-        const { 
-            name, 
-            description 
-        } = request.body as CreateCategoryDTO;
+        return HTTPResponse.ok(
+            response,
+            "CATEGORIES_FOUND_SUCCESSFULLY",
+            data
+        );
 
-        await this.service.create({
-            name,
-            description
-        });
+    };
+
+    @Route("/", Method.POST, [
+        authGuard,
+        roleGuard(Role.ADMIN)
+    ])
+    public async create(
+        request: TypedRequest<typeof CreateCategorySchema>, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await CategoryService.create(
+            request.body
+        );
 
         return HTTPResponse.ok(
             response,
             "CATEGORY_CREATED_SUCCESSFULLY",
-            {}
+            data
+        );
+    
+    };
+
+    @Route("/:id", Method.PUT, [
+        authGuard,
+        roleGuard(Role.ADMIN)
+    ])
+    public async update(
+        request: TypedRequest<typeof CreateCategorySchema>, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await CategoryService.update({
+            ...request.body,
+            id: Number(request.params.id)
+        });
+
+        return HTTPResponse.ok(
+            response,
+            "CATEGORY_UPDATED_SUCCESSFULLY",
+            data
+        );
+
+    };
+
+    @Route("/:id", Method.DELETE, [
+        authGuard,
+        roleGuard(Role.ADMIN)
+    ])
+    public async delete(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await CategoryService.delete(
+            Number(request.params.id)
+        );
+
+        return HTTPResponse.ok(
+            response,
+            "CATEGORY_DELETED_SUCCESSFULLY",
+            data
         );
 
     };

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import UnauthorizedError from "../../core/errors/unauthorized.error.js";
-import JWTService from "../../core/security/jwt.service.js";
-import { MiddlewareHandler } from "../../core/types/middleware-handler.type.js";
+import JWTService from "../../core/services/jwt.service.js";
+import { MiddlewareHandler } from "../../core/types/middleware/middleware-handler.type.js";
 
 export const authGuard: MiddlewareHandler = async (
     request: Request,

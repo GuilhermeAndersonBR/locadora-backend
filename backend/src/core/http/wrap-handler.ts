@@ -1,17 +1,26 @@
 import { Request, Response, NextFunction } from "express";
-import { MiddlewareHandler } from "../types/middleware-handler.type.js";
+import { MiddlewareHandler } from "../types/middleware/middleware-handler.type.js";
 import { error } from "node:console";
+import { transaction } from "../config/transaction.config.js";
 
 export function wrap(fn: Function) {
     
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ) => {
         
         try {
 
-            const result = fn(req, res, next);
+            const result =
+                await transaction(async () => {
 
-            if (result instanceof Promise) 
-                result.catch(next);
+                    return await fn(req, res, next);
+
+                });
+
+            return result;
         
         } catch (err) {
             

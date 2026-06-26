@@ -1,109 +1,161 @@
 import { Request, Response } from "express";
-
+import Controller from "../../../../core/decorators/controller.decorator.js";
 import Route from "../../../../core/decorators/route.decorator.js";
 import Method from "../../../../core/enums/method.enum.js";
-import Controller from "../../../../core/decorators/controller.decorator.js";
-import UserService from "../service/user.service.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
-import { createUserValidator } from "../validator/create-user.validator.js";
-import { create } from "node:domain";
-import { createUserTransformer } from "../transformer/create-user.transformer.js";
-import Status from "../../../../core/enums/status.enum.js";
+import UserService from "../service/user.service.js";
+import CreateUserSchema from "../schema/create-user.schema.js";
+import { BodySchema } from "../../../../core/decorators/body-schema.decorator.js";
+import { TypedRequest } from "../../../../core/types/typed-request.type.js";
+import Role from "../types/role.type.js";
+import UpdateUserSchema from "../schema/update-user.schema.js";
 import { authGuard } from "../../../guard/auth.guard.js";
+import UpdatePasswordUserSchema from "../schema/update-password-schema.js";
+import UpdateUserRoleSchema from "../schema/update-role.schema.js";
 import roleGuard from "../../../guard/role.guard.js";
+import DeleteUserSchema from "../schema/delete-user.schema.js";
 
 @Controller("/user")
 export default class UserController {
 
-    public constructor(
-        private readonly service = new UserService()
-    ) {};
-
-    @Route("/all", Method.GET, [
-        authGuard,
-        roleGuard("ADMIN")
-    ])
+    @Route("/", Method.GET, [])
     public async getAll(
-        _request: Request, 
+        request: Request, 
         response: Response
     ): Promise<Response> {
 
-        const users = await this.service.getAll();
+        const data = await UserService.getAll();
 
         return HTTPResponse.ok(
             response,
-            "Usuários obtidos com sucesso", 
-            users
+            "USERS_FOUND_SUCCESSFULLY",
+            data
         );
 
     };
 
-    @Route("/create", Method.POST, [
-        createUserTransformer,
-        createUserValidator
-    ])
+    @Route("/client", Method.POST, [])
+    @BodySchema(CreateUserSchema)
     public async create(
-        request: Request, 
+        request: TypedRequest<typeof CreateUserSchema>, 
         response: Response
     ): Promise<Response> {
 
-        const { name, cpf, email, password, role } = request.body;
-
-        const user = await this.service.create({
-            name, 
-            cpf, 
-            email, 
-            password,
-            role
+        const data = await UserService.create({
+            ...request.body,
+            role: Role.CLIENT
         });
 
-        return HTTPResponse.created(
-            response, 
-            "Usuário criado com sucesso",
-            user
+        return HTTPResponse.ok(
+            response,
+            "USER_CREATED_SUCCESSFULLY",
+            data
         );
 
     };
 
-    @Route("/me", Method.GET, [
-        authGuard
-    ])
-    public async me(
+    @Route("/:id", Method.GET, [])
+    public async getById(
         request: Request, 
         response: Response
     ): Promise<Response> {
 
-        const { user } = request;
+        const { id } = request.params;
 
-        if(!user)
-            return HTTPResponse.fail(
-                response,
-                "Usuário não encontrado",
-                Status.UNAUTHORIZED
-            );
+        const data = await UserService.getById(
+            Number(id)
+        );
 
         return HTTPResponse.ok(
             response,
             "USER_FOUND_SUCCESSFULLY",
-            user
+            data
         );
 
     };
 
-    @Route("/update/:id", Method.PUT, [
+    @Route("/me", Method.PUT, [
         authGuard
     ])
+    @BodySchema(UpdateUserSchema)
     public async update(
-        request: Request, 
+        request: TypedRequest<typeof UpdateUserSchema>, 
         response: Response
     ): Promise<Response> {
 
-        
+        const data = await UserService.update(
+            request.user!,
+            request.body
+        );
 
         return HTTPResponse.ok(
-            
-        )
+            response,
+            "USER_UPDATED_SUCCESSFULLY",
+            data
+        );
 
-    }
+    };
+
+    @Route("/me/password", Method.DELETE, [
+        authGuard
+    ])
+    @BodySchema(UpdatePasswordUserSchema)
+    public async updatePassword(
+        request: TypedRequest<typeof UpdatePasswordUserSchema>, 
+        response: Response
+    ): Promise<Response> {
+
+        return HTTPResponse.ok(
+            response,
+            "PASSWORD_UPDATED_SUCCESSFULLY",
+            {}
+        );
+
+    };
+
+    @Route("/me/role", Method.PUT, [
+        authGuard,
+        roleGuard(Role.ADMIN)
+    ])
+    @BodySchema(UpdateUserRoleSchema)
+    public async updateRole(
+        request: TypedRequest<typeof UpdateUserRoleSchema>, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await UserService.updateRole(
+            request.user!,
+            request.body
+        );
+
+        return HTTPResponse.ok(
+            response,
+            "ROLE_UPDATED_SUCCESSFULLY",
+            data
+        );
+
+    };
+
+    @Route("/me", Method.DELETE, [
+        authGuard
+    ])
+    @BodySchema(DeleteUserSchema)
+    public async delete(
+        request: TypedRequest<typeof DeleteUserSchema>, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await UserService.delete(
+            request.user!,
+            request.body
+        );
+
+        return HTTPResponse.ok(
+            response,
+            "USER_DELETED_SUCCESSFULLY",
+            data
+        );
+
+    };
 
 };

@@ -1,0 +1,132 @@
+import { transaction } from "../../../../core/config/transaction.config.js";
+import ConflictError from "../../../../core/errors/conflict.error.js";
+import NotFoundError from "../../../../core/errors/not-found.error.js";
+import { TypedBody } from "../../../../core/types/typed-body.type.js";
+import UserRepository from "../../user/repository/user.repository.js";
+import VehicleRepository from "../../vehicle/repository/vehicle.repository.js";
+import VehicleService from "../../vehicle/service/vehicle.service.js";
+import VehicleStatus from "../../vehicle/types/vehicle-status.type.js";
+import RentalCalc from "../calc/rental.calc.js";
+import RentalPolicy from "../policy/rental.policy.js";
+import RentalRepository from "../repository/rental.repository.js";
+import CreateRentalSchema from "../schema/create-rental.schema.js";
+import RentalStatus from "../types/rental-status.types.js";
+
+export default abstract class RentalService {
+
+    public static async create(
+        data: TypedBody<typeof CreateRentalSchema>
+    ): Promise<Record<string, any>> {
+
+        const user = await UserRepository.getById(
+            data.user_id
+        );
+
+        if(!user)
+            throw new NotFoundError(
+                "USER_NOT_FOUND"
+            );
+
+        const vehicle = await VehicleRepository.findById(
+            data.vehicle_id
+        );
+
+        if(!vehicle)
+            throw new NotFoundError(
+                "VEHICLE_NOT_FOUND"
+            );
+
+        if(
+            vehicle.status !== VehicleStatus.AVAILABLE
+        ) throw new ConflictError(
+            "VEHICLE_ALREADY_RENTED"
+        );
+
+        const alreadyRented = 
+            await RentalRepository.hasActiveRental(
+                vehicle.id
+            );
+        
+        if(alreadyRented)
+            throw new ConflictError(
+                "VEHICLE_ALREADY_RENTED"
+            );
+        
+        if(
+            data.expected_return_date <= 
+            data.start_date
+        ) throw new ConflictError(
+            "INVALID_RENTAL_PERIOD"
+        );
+
+        const totalDailyPriceCents = 
+            RentalCalc.calculate(
+                data.start_date,
+                data.expected_return_date,
+                vehicle.daily_price_cents
+            );
+
+        const rentalId = await RentalRepository.create({
+            ...data,
+            daily_price_cents: vehicle.daily_price_cents,
+            total_price_cents: totalDailyPriceCents,
+        });
+
+        await VehicleRepository.update({
+            id: vehicle.id,
+            status: VehicleStatus.RENTED
+        });
+
+        return {
+            id: rentalId
+        };
+
+    };
+
+    public static async finish(
+        id: number
+    ): Promise<Record<string, any>> {
+
+        return transaction<Record<string, any>>(
+            
+            async () => {
+
+                const rental = await RentalRepository.findById(
+                    id
+                );
+
+                if(!rental)
+                    throw new NotFoundError(
+                        "RENTAL_NOT_FOUND"
+                    );
+
+                RentalPolicy.canFinish(rental);
+
+                const totalDailyPriceCents = 
+                    RentalCalc.calculate(
+                        rental.start_date,
+                        new Date(),
+                        rental.daily_price_cents
+                    );
+                
+                await RentalRepository.finish(
+                    id,
+                    totalDailyPriceCents
+                );
+                
+                await VehicleRepository.update({
+                    id: rental.vehicle_id,
+                    status: VehicleStatus.AVAILABLE
+                });
+
+                return {
+                    id: rental.id
+                };
+
+            }
+        
+        );
+
+    };
+
+};
