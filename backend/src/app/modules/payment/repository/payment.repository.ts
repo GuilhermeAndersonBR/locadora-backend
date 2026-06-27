@@ -1,0 +1,173 @@
+import { ResultSetHeader } from "mysql2";
+import { getExecutor } from "../../../../core/config/executor.config.js";
+import { TypedBody } from "../../../../core/types/typed-body.type.js";
+import CreatePaymentSchema from "../schema/create-payment.schema.js";
+import PaymentStatus from "../types/payment-status.type.js";
+import { PaymentRow } from "../types/payment.row.js";
+import UpdatePaymentSchema from "../schema/update-status.schema.js";
+
+export default abstract class PaymentRepository {
+
+    public static async create(
+        data: TypedBody<typeof CreatePaymentSchema> & {
+            amount: number;
+            status: PaymentStatus;
+        }
+    ): Promise<number> {
+
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            ResultSetHeader
+        >(
+            `
+            INSERT INTO payments
+            (
+                amount,
+                payment_method,
+                status
+                rental_id
+            )
+            VALUES (?, ?)
+            `,
+            [
+                data.amount,
+                data.payment_method,
+                data.status,
+                data.rental_id
+            ]
+        );
+
+        return result.insertId;
+
+    };
+
+    public async findById(
+        id: number
+    ): Promise<PaymentRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<PaymentRow>>(
+                `
+                SELECT *
+                FROM payments
+                WHERE id = ?
+                AND deleted_at IS NULL
+                LIMIT 1
+                `,
+                [
+                    id
+                ]
+            );
+        
+        return result[0] ?? null;
+        
+    };
+
+    public static async findByRentalId(
+        rentalId: number
+    ): Promise<PaymentRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<PaymentRow>>(
+                `
+                SELECT *
+                FROM payments
+                WHERE rental_id = ?
+                AND deleted_at IS NULL
+                LIMIT 1
+                `,
+                [
+                    rentalId
+                ]
+            );
+        
+        return result[0] ?? null;
+
+    };
+
+    public static async updateStatus(
+        data: TypedBody<typeof UpdatePaymentSchema> & {
+            id: number
+        }
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE payments
+            SET
+                status = ?,
+                payment_date = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
+                data.status,
+                data.payment_date ?? null,
+                data.id
+            ]
+        );
+
+    };
+
+    public static async markAsPaid(
+        id: number
+    ): Promise<void> {
+
+        return this.updateStatus({
+            id,
+            status: PaymentStatus.PAID,
+            payment_date: new Date()
+        });
+
+    };
+
+    public static async markAsFailed(
+        id: number
+    ): Promise<void> {
+
+        return this.updateStatus({
+            id,
+            status: PaymentStatus.FAILED
+        });
+
+    };
+
+    public static async refund(
+        id: number
+    ): Promise<void> {
+
+        return this.updateStatus({
+            id,
+            status: PaymentStatus.REFUNDED
+        });
+
+    };
+
+    public static async delete(
+        id: number
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE payments
+            SET
+                deleted_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
+                id
+            ]
+        );
+
+    };
+
+};
