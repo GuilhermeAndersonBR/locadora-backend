@@ -4,18 +4,16 @@ import NotFoundError from "../../../../core/errors/not-found.error.js";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import UserRepository from "../../user/repository/user.repository.js";
 import VehicleRepository from "../../vehicle/repository/vehicle.repository.js";
-import VehicleService from "../../vehicle/service/vehicle.service.js";
-import VehicleStatus from "../../vehicle/types/vehicle-status.type.js";
+import VehicleStatus from "@locadora/shared/vehicle/types/vehicle-status.type.js";
 import RentalCalc from "../calc/rental.calc.js";
 import RentalPolicy from "../policy/rental.policy.js";
 import RentalRepository from "../repository/rental.repository.js";
-import CreateRentalSchema from "../schema/create-rental.schema.js";
-import RentalStatus from "../types/rental-status.types.js";
+import { CreateRentalRequest } from "@locadora/shared/rental/request/create-rental.request.js";
 
 export default abstract class RentalService {
 
     public static async create(
-        data: TypedBody<typeof CreateRentalSchema>
+        data: TypedBody<CreateRentalRequest>
     ): Promise<Record<string, any>> {
 
         const user = await UserRepository.getById(
@@ -87,45 +85,37 @@ export default abstract class RentalService {
         id: number
     ): Promise<Record<string, any>> {
 
-        return transaction<Record<string, any>>(
-            
-            async () => {
-
-                const rental = await RentalRepository.findById(
-                    id
-                );
-
-                if(!rental)
-                    throw new NotFoundError(
-                        "RENTAL_NOT_FOUND"
-                    );
-
-                RentalPolicy.canFinish(rental);
-
-                const totalDailyPriceCents = 
-                    RentalCalc.calculate(
-                        rental.start_date,
-                        new Date(),
-                        rental.daily_price_cents
-                    );
-                
-                await RentalRepository.finish(
-                    id,
-                    totalDailyPriceCents
-                );
-                
-                await VehicleRepository.update({
-                    id: rental.vehicle_id,
-                    status: VehicleStatus.AVAILABLE
-                });
-
-                return {
-                    id: rental.id
-                };
-
-            }
-        
+        const rental = await RentalRepository.findById(
+            id
         );
+
+        if(!rental)
+            throw new NotFoundError(
+                "RENTAL_NOT_FOUND"
+            );
+
+        RentalPolicy.canFinish(rental);
+
+        const totalDailyPriceCents = 
+            RentalCalc.calculate(
+                rental.start_date,
+                new Date(),
+                rental.daily_price_cents
+            );
+        
+        await RentalRepository.finish(
+            id,
+            totalDailyPriceCents
+        );
+        
+        await VehicleRepository.update({
+            id: rental.vehicle_id,
+            status: VehicleStatus.AVAILABLE
+        });
+
+        return {
+            id: rental.id
+        };
 
     };
 

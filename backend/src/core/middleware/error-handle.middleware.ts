@@ -23,6 +23,8 @@ export function errorHandler(
         error
     );
 
+    console.error(error);
+
     return HTTPResponse.fail(
         response, 
         "INTERNAL_SERVER_ERROR", 

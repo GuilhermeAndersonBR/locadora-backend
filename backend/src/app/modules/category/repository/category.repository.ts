@@ -1,11 +1,10 @@
 import { ResultSetHeader } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import CreateCategorySchema from "../schema/create-category.schema.js";
-import { db } from "../../../config/database.js";
 import { CategoryRow } from "../types/category.row.js";
-import { UpdateCategorySchema } from "../schema/update-category.schema.js";
-import { DBExecutor } from "../../../../core/types/db-executor.type.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
+
+import { CreateCategoryRequest } from "@locadora/shared/category/request/create-category.request.js";
+import { UpdateCategoryRequest } from "@locadora/shared/category/request/update-category.request.js";
 
 export default class CategoryRepository {
 
@@ -31,7 +30,7 @@ export default class CategoryRepository {
     };
 
     public static async create(
-        data: TypedBody<typeof CreateCategorySchema>
+        data: TypedBody<CreateCategoryRequest>
     ): Promise<number> {
 
         const executor = getExecutor();
@@ -80,7 +79,7 @@ export default class CategoryRepository {
     };
 
     public static async update(
-        data: TypedBody<typeof UpdateCategorySchema> & {
+        data: TypedBody<UpdateCategoryRequest> & {
             id: number
         }
     ): Promise<void> {

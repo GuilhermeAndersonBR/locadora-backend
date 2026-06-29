@@ -1,15 +1,13 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import { db } from "../../../config/database.js";
-import CreateRentalSchema from "../schema/create-rental.schema.js";
 import { RentalRow } from "../types/rental.row.js";
-import { DBExecutor } from "../../../../core/types/db-executor.type.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
+import { CreateRentalRequest } from "@locadora/shared/rental/request/create-rental.request.js";
 
 export default class RentalRepository {
 
     public static async create(
-        data: TypedBody<typeof CreateRentalSchema> & {
+        data: TypedBody<CreateRentalRequest> & {
             daily_price_cents: number,
             total_price_cents: number
         }

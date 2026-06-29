@@ -27,6 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { api } from "@/api/client";
 import { useAuthStore } from "@/stores/auth";
+import { toast } from "vue-sonner";
 
 const schema =
     toTypedSchema(
@@ -87,9 +88,14 @@ const onSubmit =
                     name: "dashboard"
                 });
 
-            } catch {
+            } catch(error) {
 
-                // toast.error(...)
+                console.log(error)
+
+                toast.error(
+                    "Email ou senha inválidos"
+                )
+                
             }
 
         }
@@ -103,7 +109,7 @@ const onSubmit =
             min-h-screen
             items-center
             justify-center
-            bg-muted/30
+            bg-muted/60
             p-4
         "
     >
@@ -204,23 +210,41 @@ const onSubmit =
 
                         </VeeField>
 
+                        <Button
+                            class="w-full"
+                            type="submit"
+                            form="login"
+                        >
+                            Entrar
+                        </Button>
+
                     </FieldGroup>
 
                 </form>
 
             </CardContent>
 
-            <CardFooter>
+            <p
+                class="
+                    text-muted-foreground
+                    text-center
+                    text-sm
+                "
+            >
+                Não possui uma conta?
 
-                <Button
-                    class="w-full"
-                    type="submit"
-                    form="login"
+                <RouterLink
+                    to="/register"
+                    class="
+                        text-primary
+                        ml-1
+                        font-medium
+                        hover:underline
+                    "
                 >
-                    Entrar
-                </Button>
-
-            </CardFooter>
+                    Criar conta
+                </RouterLink>
+            </p>
 
         </Card>
 

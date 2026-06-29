@@ -4,13 +4,13 @@ import Controller from "../../../../core/decorators/controller.decorator.js";
 import Route from "../../../../core/decorators/route.decorator.js";
 import Method from "../../../../core/enums/method.enum.js";
 import { TypedRequest } from "../../../../core/types/typed-request.type.js";
-import CreateVehicleSchema from "../schema/create-vehicle.schema.js";
 import VehicleService from "../service/vehicle.service.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
 import { authGuard } from "../../../guard/auth.guard.js";
 import roleGuard from "../../../guard/role.guard.js";
-import Role from "../../user/types/role.type.js";
-import UpdateVehicleSchema from "../schema/update-vehicle.schema.js";
+import Role from "../../../../../../shared/src/user/types/user-role.type.js";
+import { CreateVehicleRequest, CreateVehicleRequestSchema } from "@locadora/shared/vehicle/request/create-vehicle.schema.js";
+import { UpdateVehicleRequest, UpdateVehicleRequestSchema } from "@locadora/shared/vehicle/request/update-vehicle.schema.js";
 
 @Controller('/vehicle')
 export default class VehicleController {
@@ -55,9 +55,9 @@ export default class VehicleController {
         // authGuard,
         // roleGuard(Role.ADMIN)
     ])
-    @BodySchema(CreateVehicleSchema)
+    @BodySchema(CreateVehicleRequestSchema)
     public async create(
-        request: TypedRequest<typeof CreateVehicleSchema>, 
+        request: TypedRequest<CreateVehicleRequest>, 
         response: Response
     ): Promise<Response> {
 
@@ -77,9 +77,9 @@ export default class VehicleController {
         authGuard,
         roleGuard(Role.ADMIN)  
     ])
-    @BodySchema(UpdateVehicleSchema)
+    @BodySchema(UpdateVehicleRequestSchema)
     public static async update(
-        request: TypedRequest<typeof UpdateVehicleSchema>, 
+        request: TypedRequest<UpdateVehicleRequest>, 
         response: Response
     ): Promise<Response> {
 

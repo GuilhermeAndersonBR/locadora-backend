@@ -1,12 +1,13 @@
 <script setup lang="ts">
-  import HeaderComponent from './components/HeaderComponent.vue';
-  import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
+import { Toaster } from '@/components/ui/sonner'
+import AppHeader from './components/layout/AppHeader.vue';
 </script>
 
 <template>
   <Toaster />
-  <HeaderComponent />
-  <main class="flex flex-col min-h-screen">
+  <AppHeader />
+  <main>
     <RouterView />
   </main>
 </template>

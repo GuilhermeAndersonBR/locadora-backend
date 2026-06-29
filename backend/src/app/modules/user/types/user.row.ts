@@ -1,5 +1,5 @@
 import { QueryResult, RowDataPacket } from "mysql2";
-import Role from "./role.type.js";
+import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 
 export interface UserRow extends RowDataPacket {
 

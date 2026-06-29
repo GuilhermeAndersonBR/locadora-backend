@@ -1,15 +1,20 @@
-import CreateUserSchema from "../schema/create-user.schema.js";
-import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import Role from "../types/role.type.js";
+import { TypedBody, TypedFileBody } from "../../../../core/types/typed-body.type.js";
+import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 import UserRepository from "../repository/user.repository.js";
 import ConflictError from "../../../../core/errors/conflict.error.js";
 import PasswordService from "../../../../core/services/password.service.js";
 import NotFoundError from "../../../../core/errors/not-found.error.js";
 import { TokenPayload } from "../../../../core/services/jwt.service.js";
-import UpdateUserSchema from "../schema/update-user.schema.js";
-import UpdatePasswordUserSchema from "../schema/update-password-schema.js";
-import UpdateUserRoleSchema from "../schema/update-role.schema.js";
-import DeleteUserSchema from "../schema/delete-user.schema.js";
+import ImageService from "../../image/service/image.service.js";
+import ImageProcessor from "../../../../core/services/image/image-processor.service.js";
+import URLService from "../../../../core/services/url.service.js";
+import { CreateUserRequest } from "@locadora/shared/user/request/create-user.request.js";
+import { CreateUserResponse } from "@locadora/shared/user/response/create-user.res.js";
+import ImageEntityType from "@locadora/shared/image/types/image-entity.type.js";
+import { UpdateUserRequest } from "@locadora/shared/user/request/update-user.request.js";
+import { UpdateUserPasswordRequest } from "@locadora/shared/user/request/update-password-request.js";
+import { UpdateUserRoleRequest } from "@locadora/shared/user/request/update-role.request.js";
+import { DeleteUserRequest } from "@locadora/shared/user/request/delete-user.request.js";
 
 export default class UserService {
 
@@ -24,10 +29,10 @@ export default class UserService {
     };
 
     public static async create(
-        data: TypedBody<typeof CreateUserSchema> & {
+        data: TypedFileBody<CreateUserRequest> & {
             role: Role
         }
-    ): Promise<Record<string, any>> {
+    ): Promise<CreateUserResponse> {
 
         const userGetByEmail = await UserRepository.getByEmail(
             data.email
@@ -52,8 +57,30 @@ export default class UserService {
             password: password_hash
         });
 
+        const images = await ImageService.upload({
+            entity_id: userId,
+            entity_type: ImageEntityType.USER,
+            file: data.file,
+            processors: [
+                {
+                    name: "avatar",
+                    processor: ImageProcessor.thumbnail
+                }
+            ]
+        });
+
         return {
-            id: userId
+            id: userId,
+            name: data.name,
+            email: data.email,
+            cpf: data.cpf,
+            role: data.role,
+            images: images.map(
+                (image) => ({
+                    variant: image.variant,
+                    url: URLService.url(image.storage_key)
+                })
+            )
         };
 
     };
@@ -82,7 +109,7 @@ export default class UserService {
 
     public static async update(
         requester: TokenPayload,
-        data: TypedBody<typeof UpdateUserSchema>
+        data: TypedBody<UpdateUserRequest>
     ): Promise<Record<string, any>> {
 
         const user = await UserRepository.getById(
@@ -127,7 +154,7 @@ export default class UserService {
 
     public static async updatePassword(
         requester: TokenPayload,
-        data: TypedBody<typeof UpdatePasswordUserSchema>
+        data: TypedBody<UpdateUserPasswordRequest>
     ): Promise<Record<string, any>> {
 
         const user = await UserRepository.getById(
@@ -163,7 +190,7 @@ export default class UserService {
 
     public static async updateRole(
         requester: TokenPayload,
-        data: TypedBody<typeof UpdateUserRoleSchema>
+        data: TypedBody<UpdateUserRoleRequest>
     ): Promise<Record<string, any>> {
 
         const user = await UserRepository.getById(
@@ -192,9 +219,39 @@ export default class UserService {
 
     };
 
+    public static async updateAvatar(
+        requester: TokenPayload,
+        data: TypedFileBody<{}>
+    ): Promise<Record<string, any>> {
+
+        const user = await UserRepository.getById(
+            requester.id
+        );
+
+        if(!user)
+            throw new NotFoundError(
+                "USER_NOT_FOUND"
+            );
+
+        await ImageService.upload({
+            entity_id: user.id,
+            entity_type: ImageEntityType.USER,
+            file: data.file,
+            processors: [
+                {
+                    name: "avatar",
+                    processor: ImageProcessor.thumbnail
+                }
+            ]
+        });
+
+        return {};
+
+    };
+
     public static async delete(
         requester: TokenPayload,
-        data: TypedBody<typeof DeleteUserSchema>
+        data: TypedBody<DeleteUserRequest>
     ): Promise<Record<string, any>> {
 
         const user = await UserRepository.getById(
@@ -217,6 +274,11 @@ export default class UserService {
         await UserRepository.delete({
             ...data,
             id: requester.id
+        });
+
+        await ImageService.delete({
+            entity_id: user.id,
+            entity_type: ImageEntityType.USER
         });
 
         return {};

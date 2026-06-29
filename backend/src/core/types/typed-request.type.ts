@@ -1,7 +1,12 @@
 import { Request } from "express";
-import z from "zod";
 
-export type TypedRequest<TSchema extends z.ZodTypeAny> =
+export type TypedRequest<T extends Record<string, unknown>> =
     Omit<Request, "body"> & {
-        body: z.infer<TSchema>;
+        body: T;
+    };
+
+export type TypedFileRequest<T extends Record<string, unknown>> =
+    Omit<Request, "body" | "file"> & {
+        body: T;
+        file: Express.Multer.File
     };

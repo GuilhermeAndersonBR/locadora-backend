@@ -1,8 +1,9 @@
+import { UpdateCategoryRequest } from "@locadora/shared/category/request/update-category.request.js";
 import NotFoundError from "../../../../core/errors/not-found.error.js";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import CategoryRepository from "../repository/category.repository.js";
-import CreateCategorySchema from "../schema/create-category.schema.js";
-import { UpdateCategorySchema } from "../schema/update-category.schema.js";
+
+import { CreateCategoryRequest } from "@locadora/shared/category/request/create-category.request.js";
 
 export default abstract class CategoryService {
 
@@ -17,7 +18,7 @@ export default abstract class CategoryService {
     };
 
     public static async create(
-        data: TypedBody<typeof CreateCategorySchema>
+        data: TypedBody<CreateCategoryRequest>
     ): Promise<Record<string, any>> {
 
         const categoryId = await CategoryRepository.create(
@@ -31,7 +32,7 @@ export default abstract class CategoryService {
     };
 
     public static async update(
-        data: TypedBody<typeof UpdateCategorySchema> & {
+        data: TypedBody<UpdateCategoryRequest> & {
             id: number
         }
     ): Promise<Record<string, any>> {

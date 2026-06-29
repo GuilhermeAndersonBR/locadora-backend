@@ -1,39 +1,72 @@
-
-import { api } from "@/api/client";
+import router from "@/router";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
-export const useAuthStore =
-    defineStore(
-        "auth",
-        () => {
+type User = {
+    id: number,
+    name: string,
+    email: string,
+    cpf: string,
+    role: string,
+    images: Array<{
+        variant: string,
+        url: string
+    }>
+};
 
-            const token =
-                ref<string>();
+export const useAuthStore = defineStore("auth", {
 
-            async function login(
-                email: string,
-                password: string
-            ) {
+    state: () => ({
+        token: localStorage.getItem("token") || "",
+        user: JSON.parse(
+            localStorage.getItem("user") ?? "null"
+        ) as User | null
+    }),
 
-                const response =
-                    await api.post(
-                        "/auth/login",
-                        {
-                            email,
-                            password
-                        }
-                    );
+    actions: {
 
-                token.value =
-                    response.data.token;
+        login(token: string, user: User) {
 
-            }
+            this.token = token;
+            this.user = user;
 
-            return {
-                token,
-                login
-            };
+            localStorage.setItem(
+                "token",
+                token
+            );
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(user)
+            );
+
+        },
+
+        logout() {
+
+            this.token = "";
+            this.user = null;
+
+            localStorage.removeItem(
+                "token"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
+
+            router.push({
+                name: "/"
+            });
 
         }
-    );
+
+    },
+
+    getters: {
+        isAuthenticated: state => !!state.token,
+
+        isAdmin: state =>
+            state.user?.role === "ADMIN"
+    }
+
+});

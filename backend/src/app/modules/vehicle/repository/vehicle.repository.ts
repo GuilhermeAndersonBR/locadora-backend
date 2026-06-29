@@ -1,10 +1,10 @@
 import { ResultSetHeader } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import CreateVehicleSchema from "../schema/create-vehicle.schema.js";
 import { VehicleRow } from "../types/vehicle.row.js";
-import UpdateVehicleSchema from "../schema/update-vehicle.schema.js";
-import { DBExecutor } from "../../../../core/types/db-executor.type.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
+
+import CreateVehicleSchema from "@locadora/shared/vehicle/schema/create-vehicle.schema.js";
+import UpdateVehicleSchema from "@locadora/shared/vehicle/schema/update-vehicle.schema.js";
 
 export default class VehicleRepository {
 

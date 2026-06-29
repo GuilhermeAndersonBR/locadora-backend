@@ -1,15 +1,15 @@
 import { ResultSetHeader } from "mysql2";
 import { getExecutor } from "../../../../core/config/executor.config.js";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import CreatePaymentSchema from "../schema/create-payment.schema.js";
-import PaymentStatus from "../types/payment-status.type.js";
 import { PaymentRow } from "../types/payment.row.js";
-import UpdatePaymentSchema from "../schema/update-status.schema.js";
+import { CreatePaymentRequest } from "@locadora/shared/payment/request/create-payment.schema.js";
+import PaymentStatus from "@locadora/shared/payment/types/payment-status.type.js";
+import { UpdatePaymentRequest } from "@locadora/shared/payment/request/update-status.schema.js";
 
 export default abstract class PaymentRepository {
 
     public static async create(
-        data: TypedBody<typeof CreatePaymentSchema> & {
+        data: TypedBody<CreatePaymentRequest> & {
             amount: number;
             status: PaymentStatus;
         }
@@ -91,7 +91,7 @@ export default abstract class PaymentRepository {
     };
 
     public static async updateStatus(
-        data: TypedBody<typeof UpdatePaymentSchema> & {
+        data: TypedBody<UpdatePaymentRequest> & {
             id: number
         }
     ): Promise<void> {

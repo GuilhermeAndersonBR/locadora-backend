@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import LoginView from "@/views/auth/LoginView.vue";
-import DashboardView from "@/views/DashboardView.vue";
 import { useAuthStore } from "@/stores/auth";
+import RegisterView from "@/views/auth/RegisterView.vue";
+import HomeView from "@/views/HomeView.vue";
+import DashboardView from "@/views/admin/DashboardView.vue";
 
 const routes = [
 
@@ -13,13 +15,26 @@ const routes = [
     },
 
     {
+        path: "/register",
+        name: "register",
+        component: RegisterView
+    },
+
+    {
         path: "/",
+        name: "home",
+        component: HomeView
+    },
+
+    {
+        path: "/dashboard",
         name: "dashboard",
         component: DashboardView,
-        meta: {
-            auth: true
-        }
-    }
+        //meta: {
+        //    auth: true,
+        //    role: "ADMIN"
+        //}
+    },
 
 ];
 
@@ -35,8 +50,18 @@ router.beforeEach((to) => {
 
     const auth = useAuthStore();
 
-    if (to.meta.auth && !auth.token) {
-        return { path: "/login" };
+    if (
+        to.meta.auth &&
+        !auth.isAuthenticated
+    ) {
+        return "/";
+    }
+
+    if (
+        to.meta.role &&
+        auth.user.role !== to.meta.role
+    ) {
+        return "/";
     }
 
 });

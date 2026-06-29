@@ -5,10 +5,13 @@ import Method from "../../../../core/enums/method.enum.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
 import { authGuard } from "../../../guard/auth.guard.js";
 import roleGuard from "../../../guard/role.guard.js";
-import Role from "../../user/types/role.type.js";
 import { TypedRequest } from "../../../../core/types/typed-request.type.js";
-import CreateCategorySchema from "../schema/create-category.schema.js";
 import CategoryService from "../service/category.service.js";
+import { BodySchema } from "../../../../core/decorators/body-schema.decorator.js";
+
+import { CreateCategoryRequest, CreateCategoryRequestSchema } from "@locadora/shared/category/request/create-category.request.js";
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
+import { UpdateCategoryRequest, UpdateCategoryRequestSchema } from "@locadora/shared/category/request/update-category.request.js";
 
 @Controller("/category")
 export default class CategoryController {
@@ -31,10 +34,11 @@ export default class CategoryController {
 
     @Route("/", Method.POST, [
         authGuard,
-        roleGuard(Role.ADMIN)
+        roleGuard(UserRole.ADMIN)
     ])
+    @BodySchema(CreateCategoryRequestSchema)
     public async create(
-        request: TypedRequest<typeof CreateCategorySchema>, 
+        request: TypedRequest<CreateCategoryRequest>, 
         response: Response
     ): Promise<Response> {
 
@@ -52,10 +56,11 @@ export default class CategoryController {
 
     @Route("/:id", Method.PUT, [
         authGuard,
-        roleGuard(Role.ADMIN)
+        roleGuard(UserRole.ADMIN)
     ])
+    @BodySchema(UpdateCategoryRequestSchema)
     public async update(
-        request: TypedRequest<typeof CreateCategorySchema>, 
+        request: TypedRequest<UpdateCategoryRequest>, 
         response: Response
     ): Promise<Response> {
 
@@ -74,7 +79,7 @@ export default class CategoryController {
 
     @Route("/:id", Method.DELETE, [
         authGuard,
-        roleGuard(Role.ADMIN)
+        roleGuard(UserRole.ADMIN)
     ])
     public async delete(
         request: Request, 

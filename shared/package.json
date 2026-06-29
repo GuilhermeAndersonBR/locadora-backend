@@ -1,0 +1,20 @@
+{
+  "name": "@locadora/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "exports": {
+    "./*": "./src/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
+  }
+}

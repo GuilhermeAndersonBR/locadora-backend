@@ -12,19 +12,13 @@ export default function Transaction() {
         const originalMethod = descriptor.value;
 
         descriptor.value = async function(
-            request: Request,
-            response: Response
+            ...args: Array<any>
         ) {
 
-            transaction(async () => {
-                
-                return originalMethod.apply(
-                    this,
-                    request,
-                    response
-                );
-
-            });
+            await transaction(() => originalMethod.apply(
+                this,
+                args
+            ));
 
         };
 

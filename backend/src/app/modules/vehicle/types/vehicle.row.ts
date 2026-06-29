@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import VehicleStatus from "./vehicle-status.type.js";
+import VehicleStatus from "../../../../../../shared/src/vehicle/types/vehicle-status.type.js";
 
 export interface VehicleRow extends RowDataPacket {
 

@@ -3,8 +3,9 @@ import NotFoundError from "../../../../core/errors/not-found.error.js";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import CategoryRepository from "../../category/repository/category.repository.js";
 import VehicleRepository from "../repository/vehicle.repository.js";
-import CreateVehicleSchema from "../schema/create-vehicle.schema.js";
-import UpdateVehicleSchema from "../schema/update-vehicle.schema.js";
+
+import CreateVehicleSchema from "@locadora/shared/vehicle/schema/create-vehicle.schema.js";
+import UpdateVehicleSchema from "@locadora/shared/vehicle/schema/update-vehicle.schema.js";
 
 export default abstract class VehicleService {
 

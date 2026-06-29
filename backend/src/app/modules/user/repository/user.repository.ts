@@ -1,15 +1,13 @@
 import { ResultSetHeader } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import { db } from "../../../config/database.js";
-import CreateUserSchema from "../schema/create-user.schema.js";
-import Role from "../types/role.type.js";
+import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 import { UserRow } from "../types/user.row.js";
-import UpdateUserSchema from "../schema/update-user.schema.js";
-import UpdatePasswordUserSchema from "../schema/update-password-schema.js";
-import UpdateUserRoleSchema from "../schema/update-role.schema.js";
-import DeleteUserSchema from "../schema/delete-user.schema.js";
-import { DBExecutor } from "../../../../core/types/db-executor.type.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
+import { CreateUserRequest } from "@locadora/shared/user/request/create-user.request.js";
+import { UpdateUserRequest } from "@locadora/shared/user/request/update-user.request.js";
+import { UpdateUserPasswordRequest } from "@locadora/shared/user/request/update-password-request.js";
+import { UpdateUserRoleRequest } from "@locadora/shared/user/request/update-role.request.js";
+import { DeleteUserRequest } from "@locadora/shared/user/request/delete-user.request.js";
 
 export default class UserRepository {
 
@@ -36,7 +34,7 @@ export default class UserRepository {
     };
 
     public static async create(
-        data: TypedBody<typeof CreateUserSchema> & {
+        data: TypedBody<CreateUserRequest> & {
             role: Role
         }
     ): Promise<number> {
@@ -140,7 +138,7 @@ export default class UserRepository {
     };
 
     public static async update(
-        data: TypedBody<typeof UpdateUserSchema> & {
+        data: TypedBody<UpdateUserRequest> & {
             id: number
         }
     ): Promise<void> {
@@ -191,7 +189,7 @@ export default class UserRepository {
     };
 
     public static async updatePassword(
-        data: TypedBody<typeof UpdatePasswordUserSchema> & {
+        data: TypedBody<UpdateUserPasswordRequest> & {
             id: number
         }
     ): Promise<void> {
@@ -215,7 +213,7 @@ export default class UserRepository {
     };
 
     public static async updateRole(
-        data: TypedBody<typeof UpdateUserRoleSchema> & {
+        data: TypedBody<UpdateUserRoleRequest> & {
             id: number
         }
     ): Promise<void> {
@@ -239,7 +237,7 @@ export default class UserRepository {
     };
 
     public static async delete(
-        data: TypedBody<typeof DeleteUserSchema> & {
+        data: TypedBody<DeleteUserRequest> & {
             id: number
         }
     ): Promise<void> {

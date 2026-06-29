@@ -6,17 +6,18 @@ import Transaction from "../../../../core/decorators/transaction.decorator.js";
 import Method from "../../../../core/enums/method.enum.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
 import { TypedRequest } from "../../../../core/types/typed-request.type.js";
-import CreatePaymentSchema from "../schema/create-payment.schema.js";
 import PaymentService from "../service/payment.service.js";
+
+import { CreatePaymentRequest, CreatePaymentRequestSchema } from "@locadora/shared/payment/request/create-payment.schema.js";
 
 @Controller("/payment")
 export default class PaymentController {
 
     @Route("/pay", Method.POST, [])
-    @BodySchema(CreatePaymentSchema)
+    @BodySchema(CreatePaymentRequestSchema)
     @Transaction()
     public async pay(
-        request: TypedRequest<typeof CreatePaymentSchema>, 
+        request: TypedRequest<CreatePaymentRequest>, 
         response: Response
     ): Promise<Response> {
 

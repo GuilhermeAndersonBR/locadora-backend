@@ -1,7 +1,3 @@
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 
-export type MiddlewareHandler = (
-    request: Request, 
-    response: Response, 
-    next: NextFunction
-) => void | Promise<void>;
+export type MiddlewareHandler = RequestHandler;

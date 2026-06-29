@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import RentalStatus from "./rental-status.types.js";
+import RentalStatus from "../../../../../../shared/src/rental/types/rental-status.types.js";
 
 export interface RentalRow extends RowDataPacket {
     

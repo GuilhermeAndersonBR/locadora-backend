@@ -1,8 +1,8 @@
 import UnauthorizedError from "../../../../core/errors/unauthorized.error.js";
-import VehicleStatus from "../../vehicle/types/vehicle-status.type.js";
+import VehicleStatus from "../../../../../../shared/src/vehicle/types/vehicle-status.type.js";
 import { VehicleRow } from "../../vehicle/types/vehicle.row.js";
-import RentalStatus from "../types/rental-status.types.js";
 import { RentalRow } from "../types/rental.row.js";
+import RentalStatus from "@locadora/shared/rental/types/rental-status.types.js";
 
 export default abstract class RentalPolicy {
 
