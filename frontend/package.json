@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@locadora/shared": "file:../shared",
     "@lucide/vue": "^1.22.0",
     "@tailwindcss/vite": "^4.3.1",
     "@vee-validate/zod": "^4.15.1",
@@ -23,10 +24,10 @@
     "tailwindcss": "^4.3.1",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.38",
+    "vue-i18n": "^11.4.6",
     "vue-router": "^5.1.0",
     "vue-sonner": "^2.0.9",
-    "zod": "^3.25.76",
-    "@locadora/shared": "file:../shared"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@iconify-json/radix-icons": "^1.2.6",

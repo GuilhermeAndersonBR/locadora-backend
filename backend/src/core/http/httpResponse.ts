@@ -1,7 +1,5 @@
 import { Response } from "express";
 import Status from "../enums/status.enum.js";
-import { QueryResult } from "mysql2";
-import TranslationService from "../services/translation.service.js";
 
 type Data = unknown | null; 
 
@@ -15,14 +13,9 @@ export default abstract class HTTPResponse {
         success: boolean
     ): Response {
 
-        const language = response.req.language;
-
         return response.status(status).json({
             success,
-            message: TranslationService.translate(
-                messageKey, 
-                language
-            ),
+            message: messageKey,
             data
         });
 

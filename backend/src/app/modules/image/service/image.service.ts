@@ -38,6 +38,16 @@ export default abstract class ImageService {
 
     };
 
+    public static async find(
+        data: TypedBody<FindImageRequest>
+    ): Promise<Array<ProcessedImage>> {
+
+        const images = await ImageRepository.find(data);
+
+        return images;
+
+    };
+
     public static async delete(
         data: TypedBody<FindImageRequest>
     ): Promise<void> {

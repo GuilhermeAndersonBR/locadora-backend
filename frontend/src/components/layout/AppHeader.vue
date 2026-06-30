@@ -1,97 +1,147 @@
 <script setup lang="ts">
-import { RouterLink, useRouter } from "vue-router";
-import UserDropdown from "./UserDropdown.vue";
+import { useAuthStore } from "@/stores/auth";
+import ModeToggle from "../app/ModeToggle.vue";
 
 import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList
-} from "@/components/ui/navigation-menu";
-import { useAuthStore } from "@/stores/auth.ts";
-import ModeToggle from "../ModeToggle.vue";
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from "@/components/ui/avatar";
+
+import { 
+    ChevronDown, 
+    LogOut, 
+    Settings, 
+    User 
+} from "@lucide/vue";
 import Button from "../ui/button/Button.vue";
+import { RouterLink } from "vue-router";
 
 const auth = useAuthStore();
-
-const router = useRouter();
 </script>
 
 <template>
     <header
         class="
+            flex
+            h-16
+            items-center
+            justify-end
             border-b
-            bg-background
             px-6
-            py-3
+            gap-4
         "
     >
-        <div
-            class="
-                mx-auto
-                flex
-                max-w-7xl
-                items-center
-                justify-between
-            "
-        >
-            <div class="flex items-center gap-8">
 
-                <RouterLink
-                    to="/"
+        <ModeToggle />
+
+        <DropdownMenu
+            v-if="auth.user"
+        >
+
+            <DropdownMenuTrigger class="
+                flex
+                items-center
+            ">
+
+                <Avatar>
+                    <AvatarImage
+                        :src="
+                            auth.user?.images?.[0]?.url ?? ''
+                        "
+                    />
+
+                    <AvatarFallback>
+                        {{
+                            auth.user?.name.slice(0, 2)
+                        }}
+                    </AvatarFallback>
+                </Avatar>
+
+                <ChevronDown class="ml-2 h-4 w-4" />
+
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+                align="end"
+            >
+
+                <div
                     class="
-                        text-xl
-                        font-bold
+                        px-2
+                        py-1
                     "
                 >
-                    Locadora
-                </RouterLink>
+                    <p class="font-medium">
+                        {{ auth.user?.name }}
+                    </p>
 
-                <NavigationMenu>
-                    <NavigationMenuList>
+                    <p
+                        class="
+                            text-xs
+                            text-muted-foreground
+                        "
+                    >
+                        {{ auth.user?.email }}
+                    </p>
+                </div>
 
-                        <NavigationMenuItem>
-                            <RouterLink
-                                to="/"
-                                class="px-3 py-2"
-                            >
-                                Home
-                            </RouterLink>
-                        </NavigationMenuItem>
+                <DropdownMenuSeparator />
 
-                        <NavigationMenuItem>
-                            <RouterLink
-                                to="/vehicles"
-                                class="px-3 py-2"
-                            >
-                                Veículos
-                            </RouterLink>
-                        </NavigationMenuItem>
+                <DropdownMenuItem>
+                    <User />Perfil
+                </DropdownMenuItem>
 
-                        <NavigationMenuItem>
-                            <RouterLink
-                                to="/rentals"
-                                class="px-3 py-2"
-                            >
-                                Meus aluguéis
-                            </RouterLink>
-                        </NavigationMenuItem>
+                <DropdownMenuItem>
+                    <Settings />Configurações
+                </DropdownMenuItem>
 
-                    </NavigationMenuList>
-                </NavigationMenu>
+                <DropdownMenuSeparator />
 
-            </div>
+                <DropdownMenuItem
+                    @click="auth.logout"
+                >
+                    <LogOut /> Sair
+                </DropdownMenuItem>
 
-            <ModeToggle />
+            </DropdownMenuContent>
 
-            <UserDropdown 
-                v-if="auth.isAuthenticated" 
-            />
-            <Button
-                v-else
-                @click="router.push('/login')"
-            >
-                Entrar
-            </Button>
+        </DropdownMenu>
+
+        <div 
+            class="
+                flex
+                items-center
+                gap-2
+            "
+            v-else
+        >
+
+            <RouterLink to="/register">
+                <Button
+                    variant="outline"
+                    size="sm"
+                >
+                    Cadastrar
+                </Button>
+            </RouterLink>
+
+            <RouterLink to="/login">
+                <Button
+                    size="sm"
+                >
+                    Entrar
+                </Button>
+            </RouterLink>
         </div>
+
     </header>
 </template>

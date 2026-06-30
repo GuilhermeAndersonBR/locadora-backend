@@ -13,8 +13,6 @@ export const CreateVehicleRequestSchema = z.object({
 
     daily_rate: VehicleInput.daily_rate,
 
-    status: VehicleInput.status,
-
     category_id: VehicleInput.category_id
 
 });

@@ -5,55 +5,85 @@ export const VehicleInput = {
 
     plate: z
         .string({
-            error: "PLATE_REQUIRED"
+            required_error: "PLATE_REQUIRED"
         })
         .trim()
-        .min(7, "PLATE_TOO_SHORT")
-        .max(10, "PLATE_TOO_LONG"),
-    
+        .min(7, {
+            message: "PLATE_TOO_SHORT"
+        })
+        .max(10, {
+            message: "PLATE_TOO_LONG"
+        })
+        .refine(
+            plate =>
+                /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/.test(plate),
+            {
+                message: "INVALID_PLATE"
+            }
+        ),
+
     brand: z
         .string({
-            error: "BRAND_REQUIRED"
+            required_error: "BRAND_REQUIRED"
         })
         .trim()
-        .min(3, "BRAND_TOO_SHORT")
-        .max(50, "BRAND_TOO_LONG"),
-    
+        .min(3, {
+            message: "BRAND_TOO_SHORT"
+        })
+        .max(50, {
+            message: "BRAND_TOO_LONG"
+        }),
+
     model: z
         .string({
-            error: "MODEL_REQUIRED"
+            required_error: "MODEL_REQUIRED"
         })
         .trim()
-        .min(3, "MODEL_TOO_SHORT")
-        .max(50, "MODEL_TOO_LONG"),
-    
-    year: z
-        .number({
-            error: "YEAR_REQUIRED"
+        .min(3, {
+            message: "MODEL_TOO_SHORT"
         })
-        .min(1900, "YEAR_TOO_LOW")
-        .max(2023, "YEAR_TOO_HIGH"),
-    
-    daily_rate: z
+        .max(50, {
+            message: "MODEL_TOO_LONG"
+        }),
+
+    year: z
+        .coerce
         .number({
-            error: "DAILY_RATE_REQUIRED"
+            required_error: "YEAR_REQUIRED",
+            invalid_type_error: "YEAR_MUST_BE_NUMBER"
+        })
+        .min(1900, {
+            message: "YEAR_TOO_LOW"
+        })
+        .max(new Date().getFullYear(), {
+            message: "YEAR_TOO_HIGH"
+        }),
+
+    daily_rate: z
+        .coerce
+        .number({
+            required_error: "DAILY_RATE_REQUIRED",
+            invalid_type_error: "DAILY_RATE_MUST_BE_NUMBER"
         })
         .int({
-            error: "DAILY_RATE_MUST_BE_INTEGER"
+            message: "DAILY_RATE_MUST_BE_INTEGER"
         })
         .positive({
-            error: "DAILY_RATE_MUST_BE_POSITIVE"
+            message: "DAILY_RATE_MUST_BE_POSITIVE"
         }),
-    
-    status: z.enum(Object.values(VehicleStatus), 
-        {
-            error: "STATUS_REQUIRED"
-        }
-    ),
+
+    status: z.enum([
+        VehicleStatus.AVAILABLE,
+        VehicleStatus.RENTED,
+        VehicleStatus.MAINTENANCE
+    ]),
 
     category_id: z
+        .coerce
         .number({
-            error: "CATEGORY_ID_REQUIRED"
+            required_error: "CATEGORY_ID_REQUIRED"
         })
+        .int()
+        .positive()
 
 };

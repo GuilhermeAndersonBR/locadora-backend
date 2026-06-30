@@ -32,6 +32,7 @@
     "vitest": "^4.1.8"
   },
   "dependencies": {
+    "@locadora/shared": "file:../shared",
     "argon2": "^0.44.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
@@ -43,7 +44,6 @@
     "sharp": "^0.35.2",
     "ts-money": "^0.4.8",
     "uuid": "^14.0.1",
-    "zod": "^4.4.3",
-    "@locadora/shared": "file:../shared"
+    "zod": "^3.25.76"
   }
 }

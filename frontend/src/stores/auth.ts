@@ -1,30 +1,38 @@
 import router from "@/router";
 import { defineStore } from "pinia";
 
-type User = {
-    id: number,
-    name: string,
-    email: string,
-    cpf: string,
-    role: string,
-    images: Array<{
-        variant: string,
-        url: string
-    }>
+import type { CreateUserResponse } from "@locadora/shared/user/response/create-user.res.js";
+
+function safeParse<T>(item: string): T | null {
+    
+    const raw = localStorage.getItem(item);
+
+    try {
+
+        const data = raw ? JSON.parse(raw) : null;
+
+        return data;
+    
+    } catch (error) {
+
+        localStorage.removeItem(item);
+        
+        return null;
+    
+    };
+
 };
 
 export const useAuthStore = defineStore("auth", {
 
     state: () => ({
         token: localStorage.getItem("token") || "",
-        user: JSON.parse(
-            localStorage.getItem("user") ?? "null"
-        ) as User | null
+        user: safeParse<CreateUserResponse>("user")
     }),
 
     actions: {
 
-        login(token: string, user: User) {
+        login(token: string, user: CreateUserResponse) {
 
             this.token = token;
             this.user = user;

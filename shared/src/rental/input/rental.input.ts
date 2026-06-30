@@ -3,41 +3,59 @@ import { z } from "zod";
 export const RentalInput = {
 
     user_id: z
+        .coerce
         .number({
-            error: "USER_ID_REQUIRED"
+            required_error: "USER_ID_REQUIRED",
+            invalid_type_error: "USER_ID_MUST_BE_NUMBER"
         })
         .int({
-            error: "USER_ID_MUST_BE_INTEGER"
+            message: "USER_ID_MUST_BE_INTEGER"
         })
         .positive({
-            error: "USER_ID_MUST_BE_POSITIVE"
+            message: "USER_ID_MUST_BE_POSITIVE"
         }),
-    
+
     vehicle_id: z
+        .coerce
         .number({
-            error: "VEHICLE_ID_REQUIRED"
+            required_error: "VEHICLE_ID_REQUIRED",
+            invalid_type_error: "VEHICLE_ID_MUST_BE_NUMBER"
         })
         .int({
-            error: "VEHICLE_ID_MUST_BE_INTEGER"
+            message: "VEHICLE_ID_MUST_BE_INTEGER"
         })
         .positive({
-            error: "VEHICLE_ID_MUST_BE_POSITIVE"
+            message: "VEHICLE_ID_MUST_BE_POSITIVE"
         }),
 
     start_date: z
-        .date({
-            error: "START_DATE_REQUIRED"
-        })
-        .min(new Date(), {
-            error: "START_DATE_MUST_BE_IN_FUTURE"
-        }),
-    
+        .preprocess(
+            (val) => new Date(val as string),
+            z.date({
+                required_error: "START_DATE_REQUIRED",
+                invalid_type_error: "START_DATE_INVALID"
+            })
+        )
+        .refine(
+            date => date.getTime() > Date.now(),
+            {
+                message: "START_DATE_MUST_BE_IN_FUTURE"
+            }
+        ),
+
     expected_return_date: z
-        .date({
-            error: "EXPECTED_RETURN_DATE_REQUIRED"
-        })
-        .min(new Date(), {
-            error: "EXPECTED_RETURN_DATE_MUST_BE_IN_FUTURE"
-        })
+        .preprocess(
+            (val) => new Date(val as string),
+            z.date({
+                required_error: "EXPECTED_RETURN_DATE_REQUIRED",
+                invalid_type_error: "EXPECTED_RETURN_DATE_INVALID"
+            })
+        )
+        .refine(
+            date => date.getTime() > Date.now(),
+            {
+                message: "EXPECTED_RETURN_DATE_MUST_BE_IN_FUTURE"
+            }
+        )
 
 };

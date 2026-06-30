@@ -11,6 +11,9 @@ import { LoginRequest } from "@locadora/shared/auth/request/login.request.js";
 import { RegisterRequest } from "@locadora/shared/auth/request/register.request.js";
 import { LoginResponse } from "@locadora/shared/auth/response/login.response.js";
 import { RegisterResponse } from "@locadora/shared/auth/response/register.response.js";
+import ImageService from "../../image/service/image.service.js";
+import ImageEntityType from "@locadora/shared/image/types/image-entity.type.js";
+import URLService from "../../../../core/services/url.service.js";
 
 export default class AuthService {
 
@@ -18,28 +21,54 @@ export default class AuthService {
         data: TypedBody<LoginRequest>
     ): Promise<LoginResponse> {
 
-        const user = await UserRepository.getByEmail(
-            data.email
-        );
+        try {
 
-        if(!user)
-            throw new NotFoundError("USER_NOT_FOUND");
-
-        if(!await PasswordService.verify(
-            data.password,
-            user.password_hash
-        ))
-            throw new UnauthorizedError(
-                "INVALID_PASSWORD"
+            const user = await UserRepository.getByEmail(
+                data.email
             );
 
-        const token = JWTService.sign({
-            id: user.id,
-            role: user.role
-        });
+            if(!user)
+                throw new NotFoundError("USER_NOT_FOUND");
 
-        return {
-            token
+            if(!await PasswordService.verify(
+                data.password,
+                user.password_hash
+            ))
+                throw new UnauthorizedError(
+                    "INVALID_PASSWORD"
+                );
+
+            const token = JWTService.sign({
+                id: user.id,
+                role: user.role
+            });
+
+            const images = await ImageService.find({
+                entity_type: ImageEntityType.USER,
+                entity_id: user.id
+            });
+
+            return {
+                token,
+                user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    cpf: user.cpf,
+                    role: user.role,
+                    images: images.map(image => ({
+                        variant: image.variant,
+                        url: URLService.url(image.storage_key)
+                    }))
+                }
+            };
+
+        } catch(error) {
+            
+            throw new UnauthorizedError(
+                "INVALID_CREDENTIALS"
+            );
+
         };
 
     };

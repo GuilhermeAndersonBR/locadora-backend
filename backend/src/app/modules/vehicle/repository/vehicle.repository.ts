@@ -2,13 +2,18 @@ import { ResultSetHeader } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import { VehicleRow } from "../types/vehicle.row.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
-
-import CreateVehicleSchema from "@locadora/shared/vehicle/schema/create-vehicle.schema.js";
-import UpdateVehicleSchema from "@locadora/shared/vehicle/schema/update-vehicle.schema.js";
+import { CreateVehicleRequest } from "@locadora/shared/vehicle/request/create-vehicle.schema.js";
+import VehicleStatus from "@locadora/shared/vehicle/types/vehicle-status.type.js";
+import { UpdateVehicleRequest } from "@locadora/shared/vehicle/request/update-vehicle.schema.js";
+import { AllVehiclesResponse } from "@locadora/shared/vehicle/response/all-vehicles.response.js";
+import { GetVehicleResponse } from "@locadora/shared/vehicle/response/get-vehicle.response.js";
 
 export default class VehicleRepository {
 
-    public static async getAll(): Promise<VehicleRow[]> {
+
+    public static async getAll(): Promise<
+        AllVehiclesResponse
+    > {
 
         const executor = getExecutor();
 
@@ -35,7 +40,9 @@ export default class VehicleRepository {
     };
 
     public static async create(
-        data: TypedBody<typeof CreateVehicleSchema>
+        data: TypedBody<CreateVehicleRequest> & {
+            status: VehicleStatus
+        }
     ): Promise<number> {
 
         const executor = getExecutor();
@@ -73,7 +80,7 @@ export default class VehicleRepository {
 
     public static async findById(
         id: number
-    ): Promise<VehicleRow | null> {
+    ): Promise<GetVehicleResponse | null> {
 
         const executor = getExecutor();
         
@@ -81,7 +88,15 @@ export default class VehicleRepository {
             Array<VehicleRow>
         >(
             `
-            SELECT *
+            SELECT
+                id, 
+                plate, 
+                brand, 
+                model, 
+                year, 
+                daily_rate, 
+                status, 
+                category_id
             FROM vehicles
             WHERE id = ?
             AND deleted_at IS NULL
@@ -122,7 +137,7 @@ export default class VehicleRepository {
     };
 
     public static async update(
-        data: TypedBody<typeof UpdateVehicleSchema> & {
+        data: TypedBody<UpdateVehicleRequest> & {
             id: number
         }
     ): Promise<void> {

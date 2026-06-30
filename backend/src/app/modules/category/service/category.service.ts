@@ -4,12 +4,13 @@ import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import CategoryRepository from "../repository/category.repository.js";
 
 import { CreateCategoryRequest } from "@locadora/shared/category/request/create-category.request.js";
+import { CreateCategoryResponse } from "@locadora/shared/category/response/get-category.response.js";
 
 export default abstract class CategoryService {
 
     public static async getAll(
 
-    ): Promise<Record<string, any>> {
+    ): Promise<CreateCategoryResponse> {
 
         const categories = await CategoryRepository.getAll();
 

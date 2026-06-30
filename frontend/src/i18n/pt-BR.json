@@ -1,0 +1,42 @@
+{
+    "NAME_REQUIRED": "Nome é obrigatório",
+    "NAME_TOO_SHORT": "Nome deve ter no mínimo 3 caracteres",
+    "NAME_TOO_LONG": "Nome deve ter no máximo 50 caracteres",
+    "EMAIL_REQUIRED": "Email é obrigatório",
+    "INVALID_EMAIL": "Email inválido",
+    "PASSWORD_REQUIRED": "Senha é obrigatória",
+    "PASSWORD_TOO_SHORT": "Senha deve ter no mínimo 8 caracteres",
+    "CPF_REQUIRED": "CPF é obrigatório",
+    "CPF_INVALID": "CPF inválido",
+    "IMAGE_REQUIRED": "Imagem de perfil é obrigatório",
+    "IMAGE_TOO_LARGE": "Imagem de perfil deve ter no máximo 5MB",
+
+    "REGISTER_SUCCESSFULLY": "Cadastro realizado com sucesso",
+    "INVALID_CREDENTIALS": "Email e\/ou senha inválidos",
+
+    "LOGIN_SUCCESSFULLY": "Login realizado com sucesso",
+
+    "PLATE_REQUIRED": "Placa é obrigatória",
+    "PLATE_TOO_SHORT": "Placa deve ter no mínimo 3 caracteres",
+    "INVALID_PLATE": "Placa inválida",
+    "BRAND_REQUIRED": "Marca é obrigatória",
+    "BRAND_TOO_SHORT": "Marca deve ter no mínimo 3 caracteres",
+    "MODEL_REQUIRED": "Modelo é obrigatório",
+    "MODEL_TOO_SHORT": "Modelo deve ter no mínimo 3 caracteres",
+    "YEAR_REQUIRED": "Ano é obrigatório",
+    "YEAR_TOO_LOW": "Ano deve ser maior que 1900",
+    "DAILY_RATE_REQUIRED": "Taxa diária é obrigatória",
+    "CATEGORY_ID_REQUIRED": "Categoria é obrigatória",
+
+    "CATEGORIES_FOUND_SUCCESSFULLY": "Categorias encontradas com sucesso",
+
+    "VEHICLE_PLATE_ALREADY_EXISTS": "Placa do veículo ja cadastrada",
+    "VEHICLE_CREATED_SUCCESSFULLY": "Veículo cadastrado com sucesso",
+    "VEHICLES_FOUND_SUCCESSFULLY": "Veículo(s) encontrado(s) com sucesso",
+    "VEHICLE_FOUND_SUCCESSFULLY": "Veículo encontrado com sucesso",
+
+    "USER_NOT_AUTHORIZED": "Usuário não autorizado",
+
+    "YEAR_TOO_HIGH": "Ano deve ser menor que o ano atual",
+    "DAILY_RATE_MUST_BE_POSITIVE": "Taxa diária deve ser maior que zero"
+}

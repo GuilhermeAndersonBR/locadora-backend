@@ -5,42 +5,50 @@ export const UserInput = {
 
     name: z
         .string({
-            error: "NAME_REQUIRED"
+            required_error: "NAME_REQUIRED"
         })
         .trim()
-        .min(3, "NAME_TOO_SHORT")
-        .max(50, "NAME_TOO_LONG"),
+        .min(3, {
+            message: "NAME_TOO_SHORT"
+        })
+        .max(50, {
+            message: "NAME_TOO_LONG"
+        }),
 
     email: z
         .string({
-            error: "EMAIL_REQUIRED"
+            required_error: "EMAIL_REQUIRED"
         })
         .trim()
-        .lowercase()
+        .toLowerCase()
         .email({
-            error: "INVALID_EMAIL"
+            message: "INVALID_EMAIL"
         }),
 
     cpf: z
-        .string()
+        .string({
+            required_error: "CPF_REQUIRED"
+        })
         .transform(cpf => cpf.replace(/\D/g, ""))
         .refine(
-            cpf => cpf.length === 11,
-            "CPF_INVALID"
+            cpf => /^\d{11}$/.test(cpf),
+            {
+                message: "CPF_INVALID"
+            }
         ),
 
     password: z
         .string({
-            error: "PASSWORD_REQUIRED"
+            required_error: "PASSWORD_REQUIRED"
         })
         .trim()
-        .min(8, "PASSWORD_TOO_SHORT"),
-        
-    role: z.enum(
-        Object.values(UserRole), 
-        {
-            error: "ROLE_REQUIRED"
-        }
-    )
+        .min(8, {
+            message: "PASSWORD_TOO_SHORT"
+        }),
+
+    role: z.enum([
+        UserRole.ADMIN,
+        UserRole.CLIENT
+    ])
 
 };

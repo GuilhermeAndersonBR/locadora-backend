@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CategoryInput = {
     name: z
         .string({
-            error: "NAME_REQUIRED"
+            required_error: "NAME_REQUIRED"
         })
         .trim()
         .min(3, "NAME_TOO_SHORT")
@@ -11,7 +11,7 @@ export const CategoryInput = {
 
     description: z
         .string({
-            error: "DESCRIPTION_REQUIRED"
+            required_error: "DESCRIPTION_REQUIRED"
         })
         .trim()
         .min(3, "DESCRIPTION_TOO_SHORT")

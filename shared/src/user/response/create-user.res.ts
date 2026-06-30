@@ -14,7 +14,10 @@ export const CreateUserResponseSchema = z.object({
 
     cpf: z.string(),
 
-    role: z.enum(Object.values(UserRole)),
+    role: z.enum([
+        UserRole.ADMIN,
+        UserRole.CLIENT
+    ]),
 
     images: z.array(
         CreateImageResponseSchema

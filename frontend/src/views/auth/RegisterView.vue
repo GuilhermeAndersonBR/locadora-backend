@@ -1,357 +1,173 @@
 <script setup lang="ts">
+import AuthCard from "@/components/auth/AuthCard.vue";
+
+import BaseForm from "@/components/forms/BaseForm.vue";
+import BaseFormInput from "@/components/forms/BaseFormInput.vue";
+import BaseFormPassword from "@/components/forms/BaseFormPassword.vue";
+import { useForm, Field as VeeField } from "vee-validate";
+import { api } from "@/api/client";
+import { toTypedSchema } from "@vee-validate/zod";
+import { RegisterRequestSchema } from "@locadora/shared/auth/request/register.request.js";
+import BaseImageInput from "@/components/forms/BaseImageInput.vue";
+import z from "zod";
+import type { RegisterResponse } from "@locadora/shared/auth/response/register.response.js";
+import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
-
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm, Field as VeeField } from 'vee-validate'
-import * as z from 'zod'
-
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-
-import { vMaska } from "maska/vue";
-
-import {
-    Field,
-    FieldGroup,
-    FieldLabel,
-    FieldError,
-} from '@/components/ui/field'
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-
-import { ref } from 'vue'
-import { api } from '@/api/client'
-import { useAuthStore } from '@/stores/auth'
-
-const file = ref<File | null>(null)
-
-const schema = toTypedSchema(
-    z.object({
-        name: z.string().min(2, 'Nome obrigatório'),
-        email: z.string().email('Email inválido'),
-        cpf: z
-            .string()
-            .min(11, 'CPF inválido')
-            .max(14, 'CPF inválido'),
-        password: z.string().min(8, 'Senha mínima de 8 caracteres'),
-    })
-)
-
-const { handleSubmit } = useForm({
-    validationSchema: schema,
-    initialValues: {
-        name: '',
-        email: '',
-        cpf: '',
-        password: '',
-    },
-})
-
-function onFileChange(e: Event) {
-    const target = e.target as HTMLInputElement
-
-    if (!target.files?.length)
-        return
-
-    file.value = target.files[0]
-}
+import RequestService from "@/services/request.service";
 
 const auth = useAuthStore();
 
 const router = useRouter();
 
+const { handleSubmit } = useForm({
+    validationSchema: toTypedSchema(
+        RegisterRequestSchema.and(
+            z.object({
+                file: z
+                    .instanceof(File, {
+                        message: "IMAGE_REQUIRED"
+                    })
+                    .refine(
+                        file => file.size <= 5 * 1024 * 1024,
+                        "IMAGE_TOO_LARGE"
+                    )
+            })
+        )
+    ),
+});
+
 const onSubmit = handleSubmit(async (values) => {
 
-    const formData = new FormData()
+    const formData = new FormData();
 
-    formData.append('name', values.name)
-    formData.append('email', values.email)
-    formData.append('cpf', values.cpf)
-    formData.append('password', values.password)
+    formData.append("name", values.name);
+    formData.append("email", values.email);
+    formData.append("cpf", values.cpf);
+    formData.append("password", values.password);
+    formData.append("file", values.file);
 
-    if (file.value) {
-        formData.append('file', file.value)
-    }
+    const result = await RequestService.request<
+        RegisterResponse
+    >({
+        method: "POST",
+        url: "/auth/register",
+        data: values,
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 
-    try {
+    if(!result) return;
 
-        const response = await api.post(
-            'auth/register',
-            formData,
-        )
+    if(result.success) {
 
-        auth.token = response.data.data.token;
+        const { token, user } = result.data!;
 
-        auth.user = response.data.data.user;
+        auth.login(token, user);
 
-        localStorage.setItem(
-            "token",
-            response.data.data.token
-        );
+        router.push("/");
+    
+    };
 
-        localStorage.setItem(
-            "user",
-            JSON.stringify(response.data.data.user)
-        );
-
-        router.push({
-            name: "/"
-        });
-
-    } catch (err) {
-
-        console.error(err)
-
-    }
-
-})
+});
 </script>
 
 <template>
-    <div
-        class="
-            flex
-            min-h-screen
-            items-center
-            justify-center
-            bg-muted/60
-            p-4
+    <AuthCard
+
+        title="Locadora"
+
+        description="
+            Registre-se na plataforma
         "
+
     >
 
-        <Card
-            class="
-                w-full
-                max-w-lg
-            "
+        <BaseForm
+            submit="Registrar"
+            @submit="onSubmit"
         >
 
-            <CardHeader>
+            <VeeField
+                name="name"
+                v-slot="{ field, errors }"
+            >
+                <BaseFormInput
+                    :field="field"
+                    :errors="errors"
+                    label="Nome"
+                    type="name"
+                />
+            </VeeField>
 
-                <CardTitle
-                    class="
-                        text-center
-                        text-2xl
-                    "
-                >
-                    Locadora
-                </CardTitle>
+            <VeeField
+                name="email"
+                v-slot="{ field, errors }"
+            >
+                <BaseFormInput
+                    :field="field"
+                    :errors="errors"
+                    label="Email"
+                    type="email"
+                />
+            </VeeField>
 
-                <CardDescription
-                    class="text-center"
-                >
-                    Cadastre-se para entrar na plataforma
-                </CardDescription>
+            <VeeField
+                name="cpf"
+                v-slot="{ field, errors }"
+            >
+                <BaseFormInput
+                    :field="field"
+                    :errors="errors"
+                    label="CPF"
+                    type="cpf"
+                    mask="###.###.###-##"
+                />
+            </VeeField>
 
-            </CardHeader>
+            <VeeField
+                name="password"
+                v-slot="{ field, errors }"
+            >
+                <BaseFormPassword
+                    :field="field"
+                    :errors="errors"
+                    label="Senha"
+                />
+            </VeeField>
 
-            <CardContent>
+            <VeeField
+                name="file"
+                v-slot="{ field, errors }"
+            >
+                <BaseImageInput
+                    :field="field"
+                    :errors="errors"
+                    label="Imagem de perfil"
+                />
+            </VeeField>
 
-                <form
-                    id="register"
-                    class="space-y-6"
-                    @submit="onSubmit"
-                >
+        </BaseForm>
 
-                    <FieldGroup>
+        <div
+            class="
+                mt-6
+                text-center
+                text-sm
+            "
+        >
+            Já possui conta?
 
-                        <VeeField
-                            v-slot="{ errors }"
-                            name="file"
-                        >
-
-                            <Field
-                                :data-invalid="!!errors.length"
-                            >
-
-                                <FieldLabel>
-                                    Foto de perfil
-                                </FieldLabel>
-
-                                <Input
-                                    type="file"
-                                    accept="image/*"
-                                    @change="onFileChange"
-                                />
-
-                                <FieldError
-                                    v-if="errors.length"
-                                    :errors="errors"
-                                />
-
-                            </Field>
-
-                        </VeeField>
-
-                        <!-- Nome -->
-                        <VeeField
-                            v-slot="{ field, errors }"
-                            name="name"
-                        >
-
-                            <Field
-                                :data-invalid="!!errors.length"
-                            >
-
-                                <FieldLabel>
-                                    Nome
-                                </FieldLabel>
-
-                                <Input
-                                    v-bind="field"
-                                    placeholder="Digite seu nome"
-                                />
-
-                                <FieldError
-                                    v-if="errors.length"
-                                    :errors="errors"
-                                />
-
-                            </Field>
-
-                        </VeeField>
-
-                        <!-- Email -->
-                        <VeeField
-                            v-slot="{ field, errors }"
-                            name="email"
-                        >
-
-                            <Field
-                                :data-invalid="!!errors.length"
-                            >
-
-                                <FieldLabel>
-                                    Email
-                                </FieldLabel>
-
-                                <Input
-                                    v-bind="field"
-                                    type="email"
-                                    placeholder="Digite seu email"
-                                />
-
-                                <FieldError
-                                    v-if="errors.length"
-                                    :errors="errors"
-                                />
-
-                            </Field>
-
-                        </VeeField>
-
-                        <!-- CPF -->
-                        <VeeField
-                            v-slot="{ field, errors }"
-                            name="cpf"
-                        >
-
-                            <Field
-                                :data-invalid="!!errors.length"
-                            >
-
-                                <FieldLabel>
-                                    CPF
-                                </FieldLabel>
-
-                                <Input
-                                    v-bind="field"
-                                    v-maska="'###.###.###-##'"
-                                    placeholder="000.000.000-00"
-                                />
-
-                                <FieldError
-                                    v-if="errors.length"
-                                    :errors="errors"
-                                />
-
-                            </Field>
-
-                        </VeeField>
-
-                        <!-- Senha -->
-                        <VeeField
-                            v-slot="{ field, errors }"
-                            name="password"
-                        >
-
-                            <Field
-                                :data-invalid="!!errors.length"
-                            >
-
-                                <FieldLabel>
-                                    Senha
-                                </FieldLabel>
-
-                                <Input
-                                    v-bind="field"
-                                    type="password"
-                                    placeholder="Digite sua senha"
-                                />
-
-                                <FieldError
-                                    v-if="errors.length"
-                                    :errors="errors"
-                                />
-
-                            </Field>
-
-                        </VeeField>
-
-                    </FieldGroup>
-
-                </form>
-
-            </CardContent>
-
-            <CardFooter
+            <RouterLink
+                to="/login"
                 class="
-                    flex
-                    flex-col
-                    gap-4
+                    text-primary
+                    hover:underline
                 "
             >
+                Entrar na conta
+            </RouterLink>
+        </div>
 
-                <Button
-                    class="w-full"
-                    type="submit"
-                    form="register"
-                >
-                    Criar conta
-                </Button>
-
-                <p
-                    class="
-                        text-muted-foreground
-                        text-center
-                        text-sm
-                    "
-                >
-                    Já possui uma conta?
-
-                    <RouterLink
-                        to="/login"
-                        class="
-                            text-primary
-                            ml-1
-                            font-medium
-                            hover:underline
-                        "
-                    >
-                        Entrar
-                    </RouterLink>
-                </p>
-
-            </CardFooter>
-
-        </Card>
-
-    </div>
+    </AuthCard>
 </template>
