@@ -25,8 +25,8 @@ import {
 import { CreateVehicleRequestSchema } from "@locadora/shared/vehicle/request/create-vehicle.schema.ts";
 
 import type {
-    CreateCategoryResponse
-} from "@locadora/shared/category/response/get-category.response.js";
+    GetAllCategoryResponse
+} from "@locadora/shared/category/response/get-all-category.response.js";
 
 const props = defineProps({
 
@@ -98,7 +98,7 @@ onMounted(async () => {
 
     const result =
         await RequestService.request<
-            CreateCategoryResponse
+            GetAllCategoryResponse
         >({
 
             method: "GET",

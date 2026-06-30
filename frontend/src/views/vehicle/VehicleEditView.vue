@@ -36,8 +36,8 @@ import {
 } from "vue";
 
 import type {
-    CreateCategoryResponse
-} from "@locadora/shared/category/response/get-category.response.js";
+    GetAllCategoryResponse
+} from "@locadora/shared/category/response/get-all-category.response.js";
 
 import AppSelect from "@/components/app/AppSelect.vue";
 
@@ -133,7 +133,7 @@ onMounted(
 
         const categoriesResult =
             await RequestService.request<
-                CreateCategoryResponse
+                GetAllCategoryResponse
             >({
 
                 method: "GET",

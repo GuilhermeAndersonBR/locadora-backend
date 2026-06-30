@@ -4,7 +4,8 @@ import {
     LayoutDashboard,
     Users,
     Calendar,
-    Settings
+    Settings,
+    SquarePen
 } from "@lucide/vue";
 </script>
 
@@ -46,7 +47,7 @@ import {
         >
 
             <RouterLink
-                to="/"
+                to="/dashboard"
                 class="
                     flex
                     items-center
@@ -75,6 +76,22 @@ import {
             >
                 <Car :size="18" />
                 Veículos
+            </RouterLink>
+
+            <RouterLink
+                to="/categories"
+                class="
+                    flex
+                    items-center
+                    gap-3
+                    rounded-lg
+                    px-3
+                    py-2
+                    hover:bg-muted
+                "
+            >
+                <SquarePen :size="18" />
+                Categorias
             </RouterLink>
 
             <RouterLink

@@ -39,8 +39,6 @@ const onSubmit = handleSubmit(async (values) => {
         const { token, user } = result.data!;
 
         auth.login(token, user);
-
-        router.push("/");
     
     };
 

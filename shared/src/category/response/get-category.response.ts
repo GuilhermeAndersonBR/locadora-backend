@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const CreateCategoryResponseSchema = z.array(z.object({
+export const GetCategoryResponseSchema = z.object({
     
     id: z.number().int().positive(),
 
@@ -8,8 +8,8 @@ export const CreateCategoryResponseSchema = z.array(z.object({
 
     description: z.string()
 
-}));
+});
 
-export type CreateCategoryResponse = z.infer<
-    typeof CreateCategoryResponseSchema
+export type GetCategoryResponse = z.infer<
+    typeof GetCategoryResponseSchema
 >;

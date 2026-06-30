@@ -21,7 +21,9 @@ import {
 import z from "zod";
 import RequestService, { type APIResponse } from "@/services/request.service";
 import { onMounted, ref } from "vue";
-import type { CreateCategoryResponse } from "@locadora/shared/category/response/get-category.response.js";
+import type { 
+    GetAllCategoryResponse
+} from "@locadora/shared/category/response/get-all-category.response.js";
 
 import AppSelect from "@/components/app/AppSelect.vue";
 
@@ -92,7 +94,7 @@ const categories = ref<
 onMounted(async () => {
     
     const result = await RequestService.request<
-        CreateCategoryResponse
+        GetAllCategoryResponse
     >({
         method: "GET",
         url: "/category"

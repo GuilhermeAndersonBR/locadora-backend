@@ -4,17 +4,39 @@ import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import CategoryRepository from "../repository/category.repository.js";
 
 import { CreateCategoryRequest } from "@locadora/shared/category/request/create-category.request.js";
-import { CreateCategoryResponse } from "@locadora/shared/category/response/get-category.response.js";
+import { GetAllCategoryResponse } from "@locadora/shared/category/response/get-all-category.response.js";
+import { GetCategoryResponse } from "@locadora/shared/category/response/get-category.response.js";
 
 export default abstract class CategoryService {
 
     public static async getAll(
 
-    ): Promise<CreateCategoryResponse> {
+    ): Promise<GetAllCategoryResponse> {
 
         const categories = await CategoryRepository.getAll();
 
         return categories;
+
+    };
+
+    public static async findById(
+        id: number
+    ): Promise<GetCategoryResponse> {
+
+        const category = await CategoryRepository.findById(
+            id
+        );
+
+        if(!category)
+            throw new NotFoundError(
+                "CATEGORY_NOT_FOUND"
+            );
+
+        return {
+            id: category.id,
+            name: category.name,
+            description: category.description
+        };
 
     };
 

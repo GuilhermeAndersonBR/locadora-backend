@@ -45,7 +45,7 @@ export default class UserController {
     ])
     @BodySchema(CreateUserRequestSchema)
     @Transaction()
-    public async create(
+    public async createClient(
         request: TypedFileRequest<CreateUserRequest>, 
         response: Response
     ): Promise<Response> {
@@ -53,6 +53,30 @@ export default class UserController {
         const data = await UserService.create({
             ...request.body,
             role: UserRole.CLIENT,
+            file: request.file
+        });
+
+        return HTTPResponse.ok(
+            response,
+            "USER_CREATED_SUCCESSFULLY",
+            data
+        );
+
+    };
+
+    @Route("/admin", Method.POST, [
+        uploadMiddleware("file")
+    ])
+    @BodySchema(CreateUserRequestSchema)
+    @Transaction()
+    public async createAdmin(
+        request: TypedFileRequest<CreateUserRequest>, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await UserService.create({
+            ...request.body,
+            role: UserRole.ADMIN,
             file: request.file
         });
 

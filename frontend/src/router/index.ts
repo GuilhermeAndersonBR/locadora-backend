@@ -7,6 +7,10 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import VehicleListView from "@/views/vehicle/VehicleListView.vue";
 import VehicleCreateView from "@/views/vehicle/VehicleCreateView.vue";
 import VehicleEditView from "@/views/vehicle/VehicleEditView.vue";
+import CategoryListView from "@/views/category/CategoryListView.vue";
+import EditCategoryView from "@/views/category/EditCategoryView.vue";
+import CreateCategoryView from "@/views/category/CreateCategoryView.vue";
+import DashboardView from "@/views/admin/DashboardView.vue";
 
 const routes = [
 
@@ -19,10 +23,11 @@ const routes = [
     {
         path: "/dashboard",
         name: "dashboard",
-        component: HomeView,
+        component: DashboardView,
         meta: {
             layout: "dashboard",
-            auth: true
+            auth: true,
+            role: "ADMIN"
         }
     },
 
@@ -31,7 +36,7 @@ const routes = [
         name: "login",
         component: LoginView,
         meta: {
-            layout: "auth"
+            layout: "auth",
         }
     },
 
@@ -41,7 +46,8 @@ const routes = [
         component: () => VehicleListView,
         meta: {
             layout: "dashboard",
-            auth: true
+            auth: true,
+            role: "ADMIN"
         }
     },
 
@@ -51,7 +57,8 @@ const routes = [
         component: () => VehicleCreateView,
         meta: {
             layout: "dashboard",
-            auth: true
+            auth: true,
+            role: "ADMIN"
         }
     },
 
@@ -61,7 +68,41 @@ const routes = [
         component: () => VehicleEditView,
         meta: {
             layout: "dashboard",
-            auth: true
+            auth: true,
+            role: "ADMIN"
+        }
+    },
+
+    {
+        path: "/categories",
+        name: "categories",
+        component: () => CategoryListView,
+        meta: {
+            layout: "dashboard",
+            auth: true,
+            role: "ADMIN"
+        }
+    },
+
+    {
+        path: "/category/create",
+        name: "category-create",
+        component: () => CreateCategoryView,
+        meta: {
+            layout: "dashboard",
+            auth: true,
+            role: "ADMIN"
+        }
+    },
+
+    {
+        path: "/category/:id/edit",
+        name: "category-edit",
+        component: () => EditCategoryView,
+        meta: {
+            layout: "dashboard",
+            auth: true,
+            role: "ADMIN"
         }
     },
 
@@ -76,7 +117,7 @@ const routes = [
 
 ];
 
-const router = createRouter({
+export const router = createRouter({
 
     history: createWebHistory(),
 

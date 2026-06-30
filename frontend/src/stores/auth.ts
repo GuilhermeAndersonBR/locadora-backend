@@ -1,7 +1,7 @@
-import router from "@/router";
 import { defineStore } from "pinia";
 
 import type { CreateUserResponse } from "@locadora/shared/user/response/create-user.res.js";
+import router from "@/router";
 
 function safeParse<T>(item: string): T | null {
     
@@ -47,6 +47,12 @@ export const useAuthStore = defineStore("auth", {
                 JSON.stringify(user)
             );
 
+            if(user.role === "ADMIN") 
+                router.push("/dashboard");
+
+            else
+                router.push("/");
+
         },
 
         logout() {
@@ -62,9 +68,7 @@ export const useAuthStore = defineStore("auth", {
                 "user"
             );
 
-            router.push({
-                name: "/"
-            });
+            router.push("/");
 
         }
 

@@ -32,6 +32,24 @@ export default class CategoryController {
 
     };
 
+    @Route("/:id", Method.GET, [])
+    public async findById(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await CategoryService.findById(
+            Number(request.params.id)
+        );
+
+        return HTTPResponse.ok(
+            response,
+            "CATEGORY_FOUND_SUCCESSFULLY",
+            data
+        );
+
+    };
+
     @Route("/", Method.POST, [
         authGuard,
         roleGuard(UserRole.ADMIN)
