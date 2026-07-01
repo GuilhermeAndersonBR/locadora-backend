@@ -2,16 +2,73 @@ import { ResultSetHeader } from "mysql2";
 import { getExecutor } from "../../../../core/config/executor.config.js";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
 import { PaymentRow } from "../types/payment.row.js";
-import { CreatePaymentRequest } from "@locadora/shared/payment/request/create-payment.schema.js";
+import { CreatePaymentRequest } from "@locadora/shared/payment/request/create-payment.request.js";
 import PaymentStatus from "@locadora/shared/payment/types/payment-status.type.js";
-import { UpdatePaymentRequest } from "@locadora/shared/payment/request/update-status.schema.js";
+import { UpdatePaymentRequest } from "@locadora/shared/payment/request/update-payment.request.js";
 
 export default abstract class PaymentRepository {
+
+    public static async getAll(
+
+    ): Promise<Array<PaymentRow>> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<PaymentRow>>(
+                `
+                SELECT
+                    id,
+                    amount,
+                    payment_method,
+                    status,
+                    payment_date,
+                    rental_id,
+                    created_at
+                FROM payments
+                WHERE deleted_at IS NULL
+                `,
+            );
+        
+        return result;
+
+    };
+
+    public static async getAllByUserId(
+        userId: number
+    ): Promise<Array<PaymentRow>> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<PaymentRow>>(
+                `
+                SELECT
+                    p.id,
+                    p.amount,
+                    p.payment_method,
+                    p.status,
+                    p.payment_date,
+                    p.rental_id
+                FROM payments AS p
+                INNER JOIN rentals AS r ON r.id = p.rental_id
+                WHERE r.user_id = ?
+                AND p.deleted_at IS NULL
+                `,
+                [
+                    userId
+                ]
+            );
+        
+        return result;
+
+    };
 
     public static async create(
         data: TypedBody<CreatePaymentRequest> & {
             amount: number;
             status: PaymentStatus;
+            payment_date?: Date;
         }
     ): Promise<number> {
 
@@ -21,19 +78,20 @@ export default abstract class PaymentRepository {
             ResultSetHeader
         >(
             `
-            INSERT INTO payments
-            (
+            INSERT INTO payments (
                 amount,
                 payment_method,
-                status
+                status,
+                payment_date,
                 rental_id
             )
-            VALUES (?, ?)
+            VALUES (?, ?, ?, ?, ?)
             `,
             [
                 data.amount,
                 data.payment_method,
                 data.status,
+                data.payment_date ?? null,
                 data.rental_id
             ]
         );

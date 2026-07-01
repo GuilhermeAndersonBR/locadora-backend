@@ -11,6 +11,10 @@ import CategoryListView from "@/views/category/CategoryListView.vue";
 import EditCategoryView from "@/views/category/EditCategoryView.vue";
 import CreateCategoryView from "@/views/category/CreateCategoryView.vue";
 import DashboardView from "@/views/admin/DashboardView.vue";
+import RentalCreateView from "@/views/rental/RentalCreateView.vue";
+import RentalsView from "@/views/rental/RentalsView.vue";
+import PaymentListView from "@/views/payments/PaymentListView.vue";
+import MyPaymentListView from "@/views/payments/MyPaymentListView.vue";
 
 const routes = [
 
@@ -25,7 +29,6 @@ const routes = [
         name: "dashboard",
         component: DashboardView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -45,7 +48,6 @@ const routes = [
         name: "vehicles",
         component: () => VehicleListView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -56,7 +58,6 @@ const routes = [
         name: "vehicle-create",
         component: () => VehicleCreateView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -67,7 +68,6 @@ const routes = [
         name: "vehicle-edit",
         component: () => VehicleEditView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -78,7 +78,6 @@ const routes = [
         name: "categories",
         component: () => CategoryListView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -89,7 +88,6 @@ const routes = [
         name: "category-create",
         component: () => CreateCategoryView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
@@ -100,10 +98,39 @@ const routes = [
         name: "category-edit",
         component: () => EditCategoryView,
         meta: {
-            layout: "dashboard",
             auth: true,
             role: "ADMIN"
         }
+    },
+
+    {
+        path: "/my-rents",
+        name: "my-rents",
+        component: () => RentalsView,
+        meta: {
+            auth: true
+        }
+    },
+
+    {
+        path: "/rent",
+        name: "rental",
+        component: RentalCreateView,
+        meta: {
+            auth: true
+        }
+    },
+
+    {
+        path: "/payments",
+        name: "payments",
+        component: () => PaymentListView
+    },
+
+    {
+        path: "/my-payments",
+        name: "my-payments",
+        component: () => MyPaymentListView,
     },
 
     {

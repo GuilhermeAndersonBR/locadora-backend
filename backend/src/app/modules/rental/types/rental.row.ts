@@ -1,6 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import RentalStatus from "../../../../../../shared/src/rental/types/rental-status.types.js";
-
+import RentalStatus from "@locadora/shared/rental/types/rental-status.types.js";
 export interface RentalRow extends RowDataPacket {
     
     id: number;

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { RouterView } from 'vue-router';
+
 </script>
 
 <template>
@@ -12,6 +14,6 @@
             p-4
         "
     >
-        <slot></slot>
+        <RouterView />
     </main>
 </template>

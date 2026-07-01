@@ -54,8 +54,8 @@ export default class VehicleController {
     };
 
     @Route("/", Method.POST, [
-        // authGuard,
-        // roleGuard(Role.ADMIN),
+        authGuard,
+        roleGuard(Role.ADMIN),
         uploadMiddleware("file")
     ])
     @BodySchema(CreateVehicleRequestSchema)
@@ -80,7 +80,7 @@ export default class VehicleController {
 
     @Route("/:id", Method.PUT, [
         authGuard,
-        // roleGuard(Role.ADMIN),
+        roleGuard(Role.ADMIN),
         uploadMiddleware("file")  
     ])
     @BodySchema(UpdateVehicleRequestSchema)

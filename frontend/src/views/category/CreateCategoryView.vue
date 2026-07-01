@@ -45,7 +45,9 @@ const onSubmit =
 
                     url: "/category",
 
-                    data: values
+                    data: values,
+
+                    toast: true
 
                 });
 

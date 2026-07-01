@@ -38,5 +38,8 @@
     "USER_NOT_AUTHORIZED": "Usuário não autorizado",
 
     "YEAR_TOO_HIGH": "Ano deve ser menor que o ano atual",
-    "DAILY_RATE_MUST_BE_POSITIVE": "Taxa diária deve ser maior que zero"
+    "DAILY_RATE_MUST_BE_POSITIVE": "Taxa diária deve ser maior que zero",
+    "DAILY_RATE_MUST_BE_NUMBER": "Taxa diária deve ser um número",
+
+    "RENTAL_CREATED_SUCCESSFULLY": "Veículo alugado com sucesso"
 }

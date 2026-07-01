@@ -24,4 +24,13 @@ export default abstract class RentalPolicy {
 
     };
 
+    public static canCancel(rental: RentalRow): void {
+
+        if (rental.status !== RentalStatus.ACTIVE)
+            throw new UnauthorizedError(
+                "RENTAL_NOT_ACTIVE"
+            );
+
+    };
+
 };

@@ -1,7 +1,7 @@
 import { RowDataPacket } from "mysql2";
-import PaymentMethod from "../../../../../../shared/src/payment/types/payment-method.type.js";
-import PaymentStatus from "../../../../../../shared/src/payment/types/payment-status.type.js";
 
+import PaymentMethod from "@locadora/shared/payment/types/payment-method.type.js";
+import PaymentStatus from "@locadora/shared/payment/types/payment-status.type.js";
 export interface PaymentRow extends RowDataPacket {
     
     id: number;
@@ -11,6 +11,8 @@ export interface PaymentRow extends RowDataPacket {
     payment_method: PaymentMethod;
 
     status: PaymentStatus;
+
+    payment_date: Date | null;
 
     rental_id: number;
 

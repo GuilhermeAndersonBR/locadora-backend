@@ -37,7 +37,7 @@ export const RentalInput = {
             })
         )
         .refine(
-            date => date.getTime() > Date.now(),
+            date => date.getTime() < Date.now(),
             {
                 message: "START_DATE_MUST_BE_IN_FUTURE"
             }

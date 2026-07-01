@@ -79,7 +79,8 @@ const onSubmit = handleSubmit(
             data: formData,
             headers: {
                 "Content-Type": "multipart/form-data"
-            }
+            },
+            toast: true
         });
 
         if(result?.success) router.push("/vehicles");
@@ -97,7 +98,7 @@ onMounted(async () => {
         GetAllCategoryResponse
     >({
         method: "GET",
-        url: "/category"
+        url: "/category",
     });
 
     if(result?.success) 

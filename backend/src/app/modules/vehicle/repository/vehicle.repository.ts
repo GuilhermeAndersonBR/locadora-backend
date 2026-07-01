@@ -136,6 +136,32 @@ export default class VehicleRepository {
 
     };
 
+    public static async findByRentalId(
+        id: number
+    ): Promise<VehicleRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] = await executor.execute<
+            Array<VehicleRow>
+        >(
+            `
+            SELECT v.*
+            FROM vehicles v
+            INNER JOIN rentals r ON r.vehicle_id = v.id
+            WHERE r.id = ?
+            AND v.deleted_at IS NULL
+            LIMIT 1
+            `,
+            [
+                id
+            ]
+        );
+
+        return result[0] ?? null;
+
+    };
+
     public static async update(
         data: TypedBody<UpdateVehicleRequest> & {
             id: number

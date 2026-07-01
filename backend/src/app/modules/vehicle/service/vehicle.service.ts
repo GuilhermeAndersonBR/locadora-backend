@@ -50,6 +50,32 @@ export default abstract class VehicleService {
 
     };
 
+    public static async findByRentalId(
+        id: number
+    ): Promise<GetVehicleResponse> {
+        
+        const vehicle = await VehicleRepository.findByRentalId(
+            id
+        );
+
+        if(!vehicle)
+            throw new NotFoundError(
+                "VEHICLE_NOT_FOUND"
+            );
+
+        return {
+            id: vehicle.id,
+            plate: vehicle.plate,
+            category_id: vehicle.category_id,
+            brand: vehicle.brand,
+            model: vehicle.model,
+            year: vehicle.year,
+            daily_rate: vehicle.daily_rate,
+            status: vehicle.status
+        };
+
+    };
+
     public static async create(
         data: TypedFileBody<CreateVehicleRequest>
     ): Promise<Record<string, any>> {
@@ -84,7 +110,7 @@ export default abstract class VehicleService {
             file: data.file,
             processors: [
                 {
-                    name: "avatar",
+                    name: "original",
                     processor: ImageProcessor.original
                 }
             ]

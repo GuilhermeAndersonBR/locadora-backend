@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterView } from "vue-router";
 import AppHeader from "@/components/layout/AppHeader.vue";
 </script>
 
@@ -16,7 +17,7 @@ import AppHeader from "@/components/layout/AppHeader.vue";
                     p-6
                 "
             >
-                <slot></slot>
+                <RouterView />
             </main>
 
         </div>

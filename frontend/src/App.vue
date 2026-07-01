@@ -1,37 +1,30 @@
 <script setup lang="ts">
 import "vue-sonner/style.css";
 import { Toaster } from "@/components/ui/sonner";
-import { computed, watchEffect } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import DashboardLayout from "./layouts/DashboardLayout.vue";
 import AppLayout from "./layouts/AppLayout.vue";
+import { useAuthStore } from "./stores/auth.ts";
 
 const route = useRoute();
 
-const layout = computed(() => {
-
-    switch(route.meta.layout) {
-
-        case "auth":
-            return AuthLayout;
-
-        case "dashboard":
-            return DashboardLayout;
-        default:
-            return AppLayout;
-
-    };
-
-});
+const auth = useAuthStore();
 </script>
 
 <template>
-    <component :is="layout">
 
-        <RouterView />
+    <AuthLayout
+        v-if="route.meta.layout === 'auth'"
+    />
 
-    </component>
+    <DashboardLayout
+        v-if="auth.isAdmin"
+    />
+
+    <AppLayout v-else />
+    
     <Toaster />
 </template>

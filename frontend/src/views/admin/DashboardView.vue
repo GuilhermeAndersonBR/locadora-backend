@@ -246,8 +246,6 @@ onMounted(
 
         </div>
 
-        <!-- Relatórios -->
-
         <Card>
 
             <CardHeader>
@@ -255,10 +253,6 @@ onMounted(
                 <CardTitle>
                     Veículos por categoria
                 </CardTitle>
-
-                <CardDescription>
-                    Relatório utilizando JOIN.
-                </CardDescription>
 
             </CardHeader>
 

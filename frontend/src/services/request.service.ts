@@ -1,5 +1,7 @@
 import { api } from "@/api/client";
 import { AxiosError, type AxiosRequestConfig } from "axios";
+import { toast } from "vue-sonner";
+import TranslationService from "./translation.service";
 
 export type APIResponse<T> = {
     success: boolean;
@@ -7,10 +9,16 @@ export type APIResponse<T> = {
     data?: T;
 };
 
+interface RequestOptions extends AxiosRequestConfig {
+
+    toast?: boolean;
+
+};
+
 export default abstract class RequestService {
 
     public static async request<T>(
-        config: AxiosRequestConfig
+        options: RequestOptions
     ): Promise<APIResponse<T>> {
         
         try {
@@ -18,23 +26,40 @@ export default abstract class RequestService {
             const { data } = await api.request<
                 APIResponse<T>
             >(
-                config
+                options
             );
+
+            if(
+                options.toast &&
+                data.message
+            ) {
+
+                toast.success(
+                    TranslationService.translate(
+                        data.message
+                    )
+                );
+
+            }
 
             return data;
 
-        } catch (error) {
-            
-            if(
-                error instanceof AxiosError &&
-                error.response?.data
-            ) return error.response.data;
+        } catch (error: any) {
 
-            return {
-                success: false,
-                message: "INTERNAL_SERVER_ERROR",
-                data: undefined
-            };
+            if(
+                options.toast &&
+                error.response?.data?.message
+            ) {
+
+                toast.error(
+                    TranslationService.translate(
+                        error.response.data.message
+                    )
+                );
+
+            }
+
+            return error.response?.data;
 
         };
 

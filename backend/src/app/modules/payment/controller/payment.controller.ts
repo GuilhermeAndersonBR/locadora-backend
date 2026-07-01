@@ -8,12 +8,54 @@ import HTTPResponse from "../../../../core/http/httpResponse.js";
 import { TypedRequest } from "../../../../core/types/typed-request.type.js";
 import PaymentService from "../service/payment.service.js";
 
-import { CreatePaymentRequest, CreatePaymentRequestSchema } from "@locadora/shared/payment/request/create-payment.schema.js";
+import { CreatePaymentRequest, CreatePaymentRequestSchema } from "@locadora/shared/payment/request/create-payment.request.js";
+import { authGuard } from "../../../guard/auth.guard.js";
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
+import roleGuard from "../../../guard/role.guard.js";
 
 @Controller("/payment")
 export default class PaymentController {
 
-    @Route("/pay", Method.POST, [])
+    @Route("/", Method.GET, [
+        authGuard,
+        roleGuard(UserRole.ADMIN)
+    ])
+    public async getAll(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await PaymentService.getAll();
+
+        return HTTPResponse.ok(
+            response,
+            "PAYMENTS_FOUND_SUCCESSFULLY",
+            data
+        );
+
+    };
+
+    @Route("/:id", Method.GET, [
+        authGuard,
+    ])
+    public async getAllByUserId(
+        request: Request, 
+        response: Response
+    ): Promise<Response> {
+
+        const data = await PaymentService.getAllByUserId(
+            Number(request.params.id)
+        );
+
+        return HTTPResponse.ok(
+            response,
+            "PAYMENTS_FOUND_SUCCESSFULLY",
+            data
+        );
+
+    };
+
+    @Route("/pay", Method.PATCH, [])
     @BodySchema(CreatePaymentRequestSchema)
     @Transaction()
     public async pay(

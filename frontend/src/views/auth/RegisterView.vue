@@ -54,7 +54,8 @@ const onSubmit = handleSubmit(async (values) => {
         data: values,
         headers: {
             "Content-Type": "multipart/form-data"
-        }
+        },
+        toast: true
     });
 
     if(!result) return;

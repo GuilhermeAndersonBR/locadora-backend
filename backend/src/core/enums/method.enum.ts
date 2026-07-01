@@ -1,6 +1,7 @@
 const Method = {
     GET: "get",
     POST: "post",
+    PATCH: "patch",
     PUT: "put",
     DELETE: "delete"
 } as const;

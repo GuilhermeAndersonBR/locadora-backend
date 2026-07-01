@@ -29,7 +29,8 @@ const onSubmit = handleSubmit(async (values) => {
     >({
         method: "POST",
         url: "/auth/login",
-        data: values
+        data: values,
+        toast: true
     });
 
     if(!result) return;

@@ -60,7 +60,9 @@ const onSubmit =
                     url:
                         `/category/${route.params.id}`,
 
-                    data: values
+                    data: values,
+
+                    toast: true
 
                 });
 

@@ -6,6 +6,95 @@ import { CreateRentalRequest } from "@locadora/shared/rental/request/create-rent
 
 export default class RentalRepository {
 
+    public static async getAll(
+
+    ): Promise<Array<RentalRow>> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<RentalRow>>(
+                `
+                SELECT 
+                    id, 
+                    start_date, 
+                    expected_return_date, 
+                    return_date,
+                    daily_price_cents,
+                    total_price_cents,
+                    status
+                FROM rentals
+                WHERE deleted_at IS NULL
+                `
+            );
+        
+        return result;
+
+    };
+
+    public static async getAllById(
+        id: number
+    ): Promise<Array<RentalRow>> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<RentalRow>>(
+                `
+                SELECT 
+                    id, 
+                    start_date, 
+                    expected_return_date, 
+                    return_date,
+                    daily_price_cents,
+                    total_price_cents,
+                    status
+                FROM rentals
+                WHERE user_id = ?
+                AND deleted_at IS NULL
+                `,
+                [
+                    id
+                ]
+            );
+        
+        return result;
+
+    };
+
+    public static async getById(
+        id: number
+    ): Promise<RentalRow | null> {
+
+        const executor = getExecutor();
+
+        const [ result ] =
+            await executor.execute<Array<RentalRow>>(
+                `
+                SELECT 
+                    id, 
+                    start_date, 
+                    expected_return_date, 
+                    return_date,
+                    daily_price_cents,
+                    total_price_cents,
+                    status,
+                    user_id,
+                    vehicle_id
+                FROM rentals
+                WHERE id = ?
+                AND deleted_at IS NULL
+                LIMIT 1
+                `,
+                [
+                    id
+                ]
+            );
+        
+        return result[0] ?? null;
+
+    };
+
     public static async create(
         data: TypedBody<CreateRentalRequest> & {
             daily_price_cents: number,
@@ -111,6 +200,28 @@ export default class RentalRepository {
             `,
             [
                 total_price_cents,
+                id
+            ]
+        );
+
+    };
+
+    public static async cancel(
+        id: number
+    ): Promise<void> {
+
+        const executor = getExecutor();
+
+        await executor.query(
+            `
+            UPDATE rentals
+            SET
+                status = 'CANCELLED',
+                updated_at = CURRENT_TIMESTAMP,
+                return_date = CURRENT_TIMESTAMP
+            WHERE id = ?
+            `,
+            [
                 id
             ]
         );
