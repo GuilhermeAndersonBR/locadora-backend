@@ -11,6 +11,9 @@ import ImageEntityType from "@locadora/shared/image/types/image-entity.type.js";
 import ImageProcessor from "../../../../core/services/image/image-processor.service.js";
 import { AllVehiclesResponse } from "@locadora/shared/vehicle/response/all-vehicles.response.js";
 import { GetVehicleResponse } from "@locadora/shared/vehicle/response/get-vehicle.response.js";
+import ImageRepository from "../../image/repository/image.repository.js";
+import ImageInternalService from "../../../../core/services/image/image-internal.service.js";
+import URLService from "../../../../core/services/url.service.js";
 
 export default abstract class VehicleService {
 
@@ -20,7 +23,32 @@ export default abstract class VehicleService {
 
         const vehicles = await VehicleRepository.getAll();
 
-        return vehicles;
+        return await Promise.all(
+            vehicles.map(async vehicle => {
+
+                const images =
+                    await ImageRepository.find({
+                        entity_id: vehicle.id,
+                        entity_type: ImageEntityType.VEHICLE
+                    });
+
+                return {
+                    id: vehicle.id,
+                    plate: vehicle.plate,
+                    category_id: vehicle.category_id,
+                    brand: vehicle.brand,
+                    model: vehicle.model,
+                    year: vehicle.year,
+                    daily_rate: vehicle.daily_rate,
+                    status: vehicle.status,
+                    images: images.map(image => ({
+                        variant: image.variant,
+                        url: URLService.url(image.url)
+                    }))
+                };
+
+            })
+        );
 
     };
 
@@ -37,6 +65,12 @@ export default abstract class VehicleService {
                 "VEHICLE_NOT_FOUND"
             );
 
+        const images =
+            await ImageRepository.find({
+                entity_id: vehicle.id,
+                entity_type: ImageEntityType.VEHICLE
+            });
+
         return {
             id: vehicle.id,
             plate: vehicle.plate,
@@ -45,7 +79,11 @@ export default abstract class VehicleService {
             model: vehicle.model,
             year: vehicle.year,
             daily_rate: vehicle.daily_rate,
-            status: vehicle.status
+            status: vehicle.status,
+            images: images.map(image => ({
+                variant: image.variant,
+                url: URLService.url(image.url)
+            }))
         };
 
     };
@@ -63,6 +101,12 @@ export default abstract class VehicleService {
                 "VEHICLE_NOT_FOUND"
             );
 
+        const images =
+            await ImageRepository.find({
+                entity_id: vehicle.id,
+                entity_type: ImageEntityType.VEHICLE
+            });
+
         return {
             id: vehicle.id,
             plate: vehicle.plate,
@@ -71,7 +115,11 @@ export default abstract class VehicleService {
             model: vehicle.model,
             year: vehicle.year,
             daily_rate: vehicle.daily_rate,
-            status: vehicle.status
+            status: vehicle.status,
+            images: images.map(image => ({
+                variant: image.variant,
+                url: URLService.url(image.url)
+            }))
         };
 
     };

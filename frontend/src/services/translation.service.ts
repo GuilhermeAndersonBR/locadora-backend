@@ -11,7 +11,7 @@ export default abstract class TranslationService {
     };
 
     public static translate(
-        key: string,
+        key: string
     ): string {
 
         const globalI18n = i18n.global;

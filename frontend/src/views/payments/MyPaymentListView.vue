@@ -3,44 +3,36 @@ import PaymentTable from "@/components/payment/PaymentTable.vue";
 </script>
 
 <template>
-
-    <div class="space-y-6">
-
-        <div
-            class="
+  <div class="space-y-6">
+    <div
+      class="
                 flex
                 items-center
                 justify-between
             "
-        >
-
-            <div>
-
-                <h1
-                    class="
+    >
+      <div>
+        <h1
+          class="
                         text-3xl
                         font-bold
                     "
-                >
-                    Meus pagamentos
-                </h1>
+        >
+          Meus pagamentos
+        </h1>
 
-                <p
-                    class="
+        <p
+          class="
                         text-muted-foreground
                     "
-                >
-                    Visualize o histórico dos seus pagamentos.
-                </p>
-
-            </div>
-
-        </div>
-
-        <PaymentTable
-            :show-actions="false"
-        />
-
+        >
+          Visualize o histórico dos seus pagamentos.
+        </p>
+      </div>
     </div>
 
+    <PaymentTable
+      :show-actions="false"
+    />
+  </div>
 </template>

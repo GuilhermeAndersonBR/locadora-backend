@@ -1,5 +1,6 @@
 import z from "zod";
 import VehicleStatus from "../types/vehicle-status.type.js";
+import { CreateImageResponseSchema } from "../../image/response/create-image.res.js";
 
 export const GetVehicleResponseSchema = z.object({
 
@@ -20,6 +21,10 @@ export const GetVehicleResponseSchema = z.object({
         VehicleStatus.RENTED,
         VehicleStatus.MAINTENANCE
     ]),
+
+    images: z.array(
+        CreateImageResponseSchema
+    ),
 
     category_id: z.number().int().positive()
 

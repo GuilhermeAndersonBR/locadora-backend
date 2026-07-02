@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { RouterView } from "vue-router";
 
 </script>
 
 <template>
-    <main
-        class="
+  <main
+    class="
             flex
             min-h-screen
             items-center
@@ -13,7 +13,7 @@ import { RouterView } from 'vue-router';
             bg-muted/30
             p-4
         "
-    >
-        <RouterView />
-    </main>
+  >
+    <RouterView />
+  </main>
 </template>

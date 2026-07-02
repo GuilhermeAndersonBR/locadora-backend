@@ -12,7 +12,7 @@ export default class VehicleRepository {
 
 
     public static async getAll(): Promise<
-        AllVehiclesResponse
+        Array<VehicleRow>
     > {
 
         const executor = getExecutor();
@@ -80,7 +80,7 @@ export default class VehicleRepository {
 
     public static async findById(
         id: number
-    ): Promise<GetVehicleResponse | null> {
+    ): Promise<VehicleRow | null> {
 
         const executor = getExecutor();
         

@@ -19,9 +19,8 @@ const sidebar =
 </script>
 
 <template>
-
-    <aside
-        class="
+  <aside
+    class="
             fixed
             left-0
             top-0
@@ -35,67 +34,88 @@ const sidebar =
             duration-300
             shadow-md
         "
-        :class="
-            sidebar.collapsed
-                ? 'w-20'
-                : 'w-64'
-        "
-    >
+    :class="
+      sidebar.collapsed
+        ? 'w-20'
+        : 'w-64'
+    "
+  >
+    <!-- Header -->
 
-        <!-- Header -->
-
-        <div
-            class="
+    <div
+      class="
                 flex
                 items-center
                 justify-between
                 border-b
                 p-4
             "
-        >
-
-            <h1
-                v-if="
-                    !sidebar.collapsed
-                "
-                class="
+    >
+      <h1
+        v-if="
+          !sidebar.collapsed
+        "
+        class="
                     text-xl
                     font-bold
                 "
-            >
-                Locadora
-            </h1>
+      >
+        Locadora
+      </h1>
 
-            <button
-                class="
+      <button
+        class="
                     rounded-md
                     p-2
                     hover:bg-muted
                 "
-                @click="
-                    sidebar.toggle()
-                "
-            >
-                <PanelLeft
-                    :size="18"
-                />
-            </button>
+        @click="
+          sidebar.toggle()
+        "
+      >
+        <PanelLeft
+          :size="18"
+        />
+      </button>
+    </div>
 
-        </div>
-
-        <nav
-            class="
+    <nav
+      class="
                 flex
                 flex-1
                 flex-col
                 gap-1
                 p-4
             "
+    >
+      <RouterLink
+        to="/dashboard"
+        class="
+                    flex
+                    items-center
+                    gap-3
+                    rounded-lg
+                    px-3
+                    py-2
+                    hover:bg-muted
+                "
+      >
+        <LayoutDashboard
+          :size="18"
+        />
+
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
         >
+          Dashboard
+        </span>
+      </RouterLink>
 
-            <RouterLink
-                to="/dashboard"
-                class="
+      <RouterLink
+        to="/vehicles"
+        class="
                     flex
                     items-center
                     gap-3
@@ -104,24 +124,23 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <LayoutDashboard
-                    :size="18"
-                />
+      >
+        <Car
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Dashboard
-                </span>
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Veículos
+        </span>
+      </RouterLink>
 
-            </RouterLink>
-
-            <RouterLink
-                to="/vehicles"
-                class="
+      <RouterLink
+        to="/categories"
+        class="
                     flex
                     items-center
                     gap-3
@@ -130,24 +149,23 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <Car
-                    :size="18"
-                />
+      >
+        <SquarePen
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Veículos
-                </span>
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Categorias
+        </span>
+      </RouterLink>
 
-            </RouterLink>
-
-            <RouterLink
-                to="/categories"
-                class="
+      <RouterLink
+        to="/rentals"
+        class="
                     flex
                     items-center
                     gap-3
@@ -156,24 +174,23 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <SquarePen
-                    :size="18"
-                />
+      >
+        <Calendar
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Categorias
-                </span>
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Locações
+        </span>
+      </RouterLink>
 
-            </RouterLink>
-
-            <RouterLink
-                to="/rentals"
-                class="
+      <RouterLink
+        to="/payments"
+        class="
                     flex
                     items-center
                     gap-3
@@ -182,24 +199,23 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <Calendar
-                    :size="18"
-                />
+      >
+        <Banknote
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Locações
-                </span>
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Pagamentos
+        </span>
+      </RouterLink>
 
-            </RouterLink>
-
-            <RouterLink
-                to="/payments"
-                class="
+      <RouterLink
+        to="/users"
+        class="
                     flex
                     items-center
                     gap-3
@@ -208,61 +224,32 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <Banknote
-                    :size="18"
-                />
+      >
+        <Users
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Pagamentos
-                </span>
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Usuários
+        </span>
+      </RouterLink>
+    </nav>
 
-            </RouterLink>
+    <!-- Footer -->
 
-            <RouterLink
-                to="/users"
-                class="
-                    flex
-                    items-center
-                    gap-3
-                    rounded-lg
-                    px-3
-                    py-2
-                    hover:bg-muted
-                "
-            >
-                <Users
-                    :size="18"
-                />
-
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Usuários
-                </span>
-
-            </RouterLink>
-
-        </nav>
-
-        <!-- Footer -->
-
-        <div
-            class="
+    <div
+      class="
                 border-t
                 p-4
             "
-        >
-
-            <RouterLink
-                to="/settings"
-                class="
+    >
+      <RouterLink
+        to="/settings"
+        class="
                     flex
                     items-center
                     gap-3
@@ -271,23 +258,19 @@ const sidebar =
                     py-2
                     hover:bg-muted
                 "
-            >
-                <Settings
-                    :size="18"
-                />
+      >
+        <Settings
+          :size="18"
+        />
 
-                <span
-                    v-if="
-                        !sidebar.collapsed
-                    "
-                >
-                    Configurações
-                </span>
-
-            </RouterLink>
-
-        </div>
-
-    </aside>
-
+        <span
+          v-if="
+            !sidebar.collapsed
+          "
+        >
+          Configurações
+        </span>
+      </RouterLink>
+    </div>
+  </aside>
 </template>

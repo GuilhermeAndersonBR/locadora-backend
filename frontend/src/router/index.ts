@@ -39,7 +39,7 @@ const routes = [
         name: "login",
         component: LoginView,
         meta: {
-            layout: "auth",
+            layout: "auth"
         }
     },
 
@@ -130,7 +130,7 @@ const routes = [
     {
         path: "/my-payments",
         name: "my-payments",
-        component: () => MyPaymentListView,
+        component: () => MyPaymentListView
     },
 
     {

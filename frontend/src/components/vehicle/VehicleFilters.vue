@@ -12,10 +12,9 @@ import {
 </script>
 
 <template>
-    <Card>
-
-        <CardContent
-            class="
+  <Card>
+    <CardContent
+      class="
                 flex
                 flex-col
                 gap-4
@@ -24,44 +23,39 @@ import {
                 lg:items-end
                 lg:justify-between
             "
-        >
-
-            <!-- Filtros -->
-            <div
-                class="
+    >
+      <!-- Filtros -->
+      <div
+        class="
                     flex
                     flex-1
                     flex-col
                     gap-4
                     md:flex-row
                 "
-            >
+      >
+        <div class="min-w-[220px]">
+          <AppInput
+            label="Placa"
+            placeholder="ABC-1234"
+            mask="@@@-####"
+          />
+        </div>
 
-                <div class="min-w-[220px]">
-
-                    <AppInput
-                        label="Placa"
-                        placeholder="ABC-1234"
-                        mask="@@@-####"
-                    />
-
-                </div>
-
-                <div class="min-w-[200px]">
-
-                    <label
-                        class="
+        <div class="min-w-[200px]">
+          <label
+            class="
                             mb-2
                             block
                             text-sm
                             font-medium
                         "
-                    >
-                        Categoria
-                    </label>
+          >
+            Categoria
+          </label>
 
-                    <select
-                        class="
+          <select
+            class="
                             flex
                             h-10
                             w-full
@@ -71,29 +65,27 @@ import {
                             px-3
                             py-2
                         "
-                    >
-                        <option>
-                            Todas categorias
-                        </option>
-                    </select>
+          >
+            <option>
+              Todas categorias
+            </option>
+          </select>
+        </div>
 
-                </div>
-
-                <div class="min-w-[200px]">
-
-                    <label
-                        class="
+        <div class="min-w-[200px]">
+          <label
+            class="
                             mb-2
                             block
                             text-sm
                             font-medium
                         "
-                    >
-                        Status
-                    </label>
+          >
+            Status
+          </label>
 
-                    <select
-                        class="
+          <select
+            class="
                             flex
                             h-10
                             w-full
@@ -103,49 +95,43 @@ import {
                             px-3
                             py-2
                         "
-                    >
-                        <option>
-                            Todos status
-                        </option>
+          >
+            <option>
+              Todos status
+            </option>
 
-                        <option>
-                            Disponível
-                        </option>
+            <option>
+              Disponível
+            </option>
 
-                        <option>
-                            Alugado
-                        </option>
+            <option>
+              Alugado
+            </option>
 
-                        <option>
-                            Manutenção
-                        </option>
-                    </select>
+            <option>
+              Manutenção
+            </option>
+          </select>
+        </div>
+      </div>
 
-                </div>
-
-            </div>
-
-            <!-- Ações -->
-            <div
-                class="
+      <!-- Ações -->
+      <div
+        class="
                     flex
                     gap-2
                 "
-            >
+      >
+        <Button
+          variant="outline"
+        >
+          Limpar
+        </Button>
 
-                <Button
-                    variant="outline"
-                >
-                    Limpar
-                </Button>
-
-                <Button>
-                    Pesquisar
-                </Button>
-
-            </div>
-
-        </CardContent>
-
-    </Card>
+        <Button>
+          Pesquisar
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
 </template>

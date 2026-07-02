@@ -12,64 +12,54 @@ const router = useRouter();
 </script>
 
 <template>
-
-    <div class="space-y-6">
-
-        <div
-            class="
+  <div class="space-y-6">
+    <div
+      class="
                 flex
                 items-center
                 justify-between
             "
-        >
-
-            <div>
-
-                <h1
-                    class="
+    >
+      <div>
+        <h1
+          class="
                         text-3xl
                         font-bold
                     "
-                >
-                    Categorias
-                </h1>
+        >
+          Categorias
+        </h1>
 
-                <p
-                    class="
+        <p
+          class="
                         text-muted-foreground
                     "
-                >
-                    Gerencie todas as categorias cadastradas.
-                </p>
+        >
+          Gerencie todas as categorias cadastradas.
+        </p>
+      </div>
 
-            </div>
-
-            <Button
-                @click="
-                    router.push(
-                        '/category/create'
-                    )
-                "
-            >
-
-                <Plus
-                    class="
+      <Button
+        @click="
+          router.push(
+            '/category/create'
+          )
+        "
+      >
+        <Plus
+          class="
                         mr-2
                         h-4
                         w-4
                     "
-                />
+        />
 
-                Nova categoria
-
-            </Button>
-
-        </div>
-
-        <CategoryFilters />
-
-        <CategoryTable />
-
+        Nova categoria
+      </Button>
     </div>
 
+    <CategoryFilters />
+
+    <CategoryTable />
+  </div>
 </template>

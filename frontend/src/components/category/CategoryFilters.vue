@@ -12,11 +12,9 @@ import {
 </script>
 
 <template>
-
-    <Card>
-
-        <CardContent
-            class="
+  <Card>
+    <CardContent
+      class="
                 flex
                 flex-col
                 gap-4
@@ -25,61 +23,49 @@ import {
                 lg:items-end
                 lg:justify-between
             "
-        >
-
-            <!-- Filtros -->
-            <div
-                class="
+    >
+      <!-- Filtros -->
+      <div
+        class="
                     flex
                     flex-1
                     flex-col
                     gap-4
                     md:flex-row
                 "
-            >
+      >
+        <div class="min-w-[250px]">
+          <AppInput
+            label="Nome"
+            placeholder="Nome da categoria"
+          />
+        </div>
 
-                <div class="min-w-[250px]">
+        <div class="flex-1">
+          <AppInput
+            label="Descrição"
+            placeholder="Descrição da categoria"
+          />
+        </div>
+      </div>
 
-                    <AppInput
-                        label="Nome"
-                        placeholder="Nome da categoria"
-                    />
-
-                </div>
-
-                <div class="flex-1">
-
-                    <AppInput
-                        label="Descrição"
-                        placeholder="Descrição da categoria"
-                    />
-
-                </div>
-
-            </div>
-
-            <!-- Ações -->
-            <div
-                class="
+      <!-- Ações -->
+      <div
+        class="
                     flex
                     gap-2
                 "
-            >
+      >
+        <Button
+          variant="outline"
+        >
+          Limpar
+        </Button>
 
-                <Button
-                    variant="outline"
-                >
-                    Limpar
-                </Button>
-
-                <Button>
-                    Pesquisar
-                </Button>
-
-            </div>
-
-        </CardContent>
-
-    </Card>
-
+        <Button>
+          Pesquisar
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
 </template>

@@ -61,60 +61,50 @@ const onSubmit =
 </script>
 
 <template>
-
-    <Card
-        class="
+  <Card
+    class="
             mx-auto
             max-w-2xl
         "
-    >
+  >
+    <CardHeader>
+      <CardTitle>
+        Nova categoria
+      </CardTitle>
 
-        <CardHeader>
+      <CardDescription>
+        Cadastre uma categoria.
+      </CardDescription>
+    </CardHeader>
 
-            <CardTitle>
-                Nova categoria
-            </CardTitle>
+    <CardContent>
+      <BaseForm
+        submit="Cadastrar"
+        :loading="isSubmitting"
+        @submit="onSubmit"
+      >
+        <VeeField
+          v-slot="{ field, errors }"
+          name="name"
+        >
+          <BaseFormInput
+            label="Nome"
+            :field="field"
+            :errors="errors"
+          />
+        </VeeField>
 
-            <CardDescription>
-                Cadastre uma categoria.
-            </CardDescription>
-
-        </CardHeader>
-
-        <CardContent>
-
-            <BaseForm
-                submit="Cadastrar"
-                :loading="isSubmitting"
-                @submit="onSubmit"
-            >
-
-                <VeeField
-                    name="name"
-                    v-slot="{ field, errors }"
-                >
-                    <BaseFormInput
-                        label="Nome"
-                        :field="field"
-                        :errors="errors"
-                    />
-                </VeeField>
-
-                <VeeField
-                    name="description"
-                    v-slot="{ field, errors }"
-                >
-                    <BaseFormInput
-                        label="Descrição"
-                        :field="field"
-                        :errors="errors"
-                    />
-                </VeeField>
-
-            </BaseForm>
-
-        </CardContent>
-
-    </Card>
-
+        <VeeField
+          v-slot="{ field, errors }"
+          name="description"
+        >
+          <BaseFormInput
+            label="Descrição"
+            :field="field"
+            :errors="errors"
+          />
+        </VeeField>
+      </BaseForm>
+    </CardContent>
+  </Card>
 </template>

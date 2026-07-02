@@ -46,9 +46,8 @@ const auth =
 </script>
 
 <template>
-
-    <header
-        class="
+  <header
+    class="
             flex
             h-16
             items-center
@@ -57,285 +56,250 @@ const auth =
             px-6
             shadow-md
         "
-    >
-
-        <div
-            class="
+  >
+    <div
+      class="
                 flex
                 items-center
                 gap-8
             "
-        >
-
-            <RouterLink
-                to="/"
-                class="
+    >
+      <RouterLink
+        to="/"
+        class="
                     text-xl
                     font-bold
                 "
-            >
-                Locadora
-            </RouterLink>
+      >
+        Locadora
+      </RouterLink>
 
-            <NavigationMenu>
-
-                <NavigationMenuList>
-
-                    <NavigationMenuItem>
-
-                        <NavigationMenuLink as-child>
-
-                            <RouterLink
-                                to="/"
-                                class="
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuLink as-child>
+              <RouterLink
+                to="/"
+                class="
                                     flex
                                     items-center
                                     gap-2
                                 "
-                            >
-                                Início
-                            </RouterLink>
+              >
+                Início
+              </RouterLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
 
-                        </NavigationMenuLink>
-
-                    </NavigationMenuItem>
-
-                    <NavigationMenuItem>
-
-                        <NavigationMenuLink as-child>
-
-                            <RouterLink
-                                to="/rent"
-                                class="
+          <NavigationMenuItem
+            v-if="
+              auth.isAuthenticated
+            "
+          >
+            <NavigationMenuLink as-child>
+              <RouterLink
+                to="/rent"
+                class="
                                     flex
                                     items-center
                                     gap-2
                                 "
-                            >
-                                Alugar veículo
-                            </RouterLink>
+              >
+                Alugar veículo
+              </RouterLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
 
-                        </NavigationMenuLink>
-
-                    </NavigationMenuItem>
-
-                    <NavigationMenuItem
-                        v-if="
-                            auth.isAuthenticated
-                        "
-                    >
-
-                        <NavigationMenuLink as-child>
-
-                            <RouterLink
-                                to="/my-rents"
-                                class="
+          <NavigationMenuItem
+            v-if="
+              auth.isAuthenticated
+            "
+          >
+            <NavigationMenuLink as-child>
+              <RouterLink
+                to="/my-rents"
+                class="
                                     flex
                                     items-center
                                     gap-2
                                 "
-                            >
-                                Meus aluguéis
-                            </RouterLink>
+              >
+                Meus aluguéis
+              </RouterLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
 
-                        </NavigationMenuLink>
-
-                    </NavigationMenuItem>
-
-                    <NavigationMenuItem
-                        v-if="
-                            auth.isAuthenticated
-                        "
-                    >
-
-                        <NavigationMenuLink as-child>
-
-                            <RouterLink
-                                to="/my-payments"
-                                class="
+          <NavigationMenuItem
+            v-if="
+              auth.isAuthenticated
+            "
+          >
+            <NavigationMenuLink as-child>
+              <RouterLink
+                to="/my-payments"
+                class="
                                     flex
                                     items-center
                                     gap-2
                                 "
-                            >
-                                Meus pagamentos
-                            </RouterLink>
+              >
+                Meus pagamentos
+              </RouterLink>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </div>
 
-                        </NavigationMenuLink>
-
-                    </NavigationMenuItem>
-
-                </NavigationMenuList>
-
-            </NavigationMenu>
-
-        </div>
-
-        <div
-            class="
+    <div
+      class="
                 flex
                 items-center
                 gap-4
             "
-        >
+    >
+      <ModeToggle />
 
-            <ModeToggle />
-
-            <DropdownMenu
-                v-if="
-                    auth.user
-                "
-            >
-
-                <DropdownMenuTrigger
-                    class="
+      <DropdownMenu
+        v-if="
+          auth.user
+        "
+      >
+        <DropdownMenuTrigger
+          class="
                         flex
                         items-center
                     "
-                >
+        >
+          <Avatar>
+            <AvatarImage
+              :src="
+                auth.user
+                  ?.images?.[0]
+                  ?.url ?? ''
+              "
+            />
 
-                    <Avatar>
+            <AvatarFallback>
+              {{
+                auth.user
+                  ?.name
+                  .slice(0,2)
+              }}
+            </AvatarFallback>
+          </Avatar>
 
-                        <AvatarImage
-                            :src="
-                                auth.user
-                                    ?.images?.[0]
-                                    ?.url ?? ''
-                            "
-                        />
-
-                        <AvatarFallback>
-                            {{
-                                auth.user
-                                    ?.name
-                                    .slice(0,2)
-                            }}
-                        </AvatarFallback>
-
-                    </Avatar>
-
-                    <ChevronDown
-                        class="
+          <ChevronDown
+            class="
                             ml-2
                             h-4
                             w-4
                         "
-                    />
+          />
+        </DropdownMenuTrigger>
 
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent
-                    align="end"
-                >
-
-                    <div
-                        class="
+        <DropdownMenuContent
+          align="end"
+        >
+          <div
+            class="
                             px-2
                             py-1
                         "
-                    >
-
-                        <p
-                            class="
+          >
+            <p
+              class="
                                 font-medium
                             "
-                        >
-                            {{
-                                auth.user.name
-                            }}
-                        </p>
+            >
+              {{
+                auth.user.name
+              }}
+            </p>
 
-                        <p
-                            class="
+            <p
+              class="
                                 text-xs
                                 text-muted-foreground
                             "
-                        >
-                            {{
-                                auth.user.email
-                            }}
-                        </p>
+            >
+              {{
+                auth.user.email
+              }}
+            </p>
+          </div>
 
-                    </div>
+          <DropdownMenuSeparator />
 
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem>
-                        <User
-                            class="
+          <DropdownMenuItem>
+            <User
+              class="
                                 mr-2
                                 h-4
                                 w-4
                             "
-                        />
-                        Perfil
-                    </DropdownMenuItem>
+            />
+            Perfil
+          </DropdownMenuItem>
 
-                    <DropdownMenuItem>
-                        <Settings
-                            class="
+          <DropdownMenuItem>
+            <Settings
+              class="
                                 mr-2
                                 h-4
                                 w-4
                             "
-                        />
-                        Configurações
-                    </DropdownMenuItem>
+            />
+            Configurações
+          </DropdownMenuItem>
 
-                    <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
 
-                    <DropdownMenuItem
-                        @click="
-                            auth.logout
-                        "
-                    >
-                        <LogOut
-                            class="
+          <DropdownMenuItem
+            @click="
+              auth.logout
+            "
+          >
+            <LogOut
+              class="
                                 mr-2
                                 h-4
                                 w-4
                             "
-                        />
-                        Sair
-                    </DropdownMenuItem>
+            />
+            Sair
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-                </DropdownMenuContent>
-
-            </DropdownMenu>
-
-            <div
-                v-else
-                class="
+      <div
+        v-else
+        class="
                     flex
                     gap-2
                 "
-            >
+      >
+        <RouterLink
+          to="/register"
+        >
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            Cadastrar
+          </Button>
+        </RouterLink>
 
-                <RouterLink
-                    to="/register"
-                >
-                    <Button
-                        variant="outline"
-                        size="sm"
-                    >
-                        Cadastrar
-                    </Button>
-                </RouterLink>
-
-                <RouterLink
-                    to="/login"
-                >
-                    <Button
-                        size="sm"
-                    >
-                        Entrar
-                    </Button>
-                </RouterLink>
-
-            </div>
-
-        </div>
-
-    </header>
-
+        <RouterLink
+          to="/login"
+        >
+          <Button
+            size="sm"
+          >
+            Entrar
+          </Button>
+        </RouterLink>
+      </div>
+    </div>
+  </header>
 </template>

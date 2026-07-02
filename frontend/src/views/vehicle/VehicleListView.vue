@@ -10,52 +10,48 @@ const router = useRouter();
 </script>
 
 <template>
-    <div class="space-y-6">
-
-        <div
-            class="
+  <div class="space-y-6">
+    <div
+      class="
                 flex
                 items-center
                 justify-between
             "
-        >
-
-            <div>
-                <h1
-                    class="
+    >
+      <div>
+        <h1
+          class="
                         text-3xl
                         font-bold
                     "
-                >
-                    Veículos
-                </h1>
+        >
+          Veículos
+        </h1>
 
-                <p
-                    class="
+        <p
+          class="
                         text-muted-foreground
                     "
-                >
-                    Gerencie todos os veículos cadastrados.
-                </p>
-            </div>
+        >
+          Gerencie todos os veículos cadastrados.
+        </p>
+      </div>
 
-            <Button
-                @click="
-                    router.push(
-                        '/vehicle/create'
-                    )
-                "
-            >
-                <Plus class="mr-2 h-4 w-4" />
+      <Button
+        @click="
+          router.push(
+            '/vehicle/create'
+          )
+        "
+      >
+        <Plus class="mr-2 h-4 w-4" />
 
-                Novo veículo
-            </Button>
-
-        </div>
-
-        <VehicleFilters />
-
-        <VehicleTable />
-
+        Novo veículo
+      </Button>
     </div>
+
+    <VehicleFilters />
+
+    <VehicleTable />
+  </div>
 </template>

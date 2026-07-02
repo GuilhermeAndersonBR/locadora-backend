@@ -15,16 +15,15 @@ const auth = useAuthStore();
 </script>
 
 <template>
+  <AuthLayout
+    v-if="route.meta.layout === 'auth'"
+  />
 
-    <AuthLayout
-        v-if="route.meta.layout === 'auth'"
-    />
+  <DashboardLayout
+    v-if="auth.isAdmin"
+  />
 
-    <DashboardLayout
-        v-if="auth.isAdmin"
-    />
-
-    <AppLayout v-else />
+  <AppLayout v-else />
     
-    <Toaster />
+  <Toaster />
 </template>

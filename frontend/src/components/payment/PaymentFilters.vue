@@ -12,11 +12,9 @@ import {
 </script>
 
 <template>
-
-    <Card>
-
-        <CardContent
-            class="
+  <Card>
+    <CardContent
+      class="
                 flex
                 flex-col
                 gap-4
@@ -25,11 +23,10 @@ import {
                 lg:items-end
                 lg:justify-between
             "
-        >
-
-            <!-- Filtros -->
-            <div
-                class="
+    >
+      <!-- Filtros -->
+      <div
+        class="
                     flex
                     flex-1
                     flex-col
@@ -37,44 +34,38 @@ import {
                     md:flex-row
                     md:flex-wrap
                 "
-            >
+      >
+        <!-- Locação -->
+        <div class="min-w-[180px]">
+          <AppInput
+            label="Locação"
+            placeholder="#123"
+          />
+        </div>
 
-                <!-- Locação -->
-                <div class="min-w-[180px]">
+        <!-- Cliente -->
+        <div class="min-w-[220px]">
+          <AppInput
+            label="Cliente"
+            placeholder="Nome do cliente"
+          />
+        </div>
 
-                    <AppInput
-                        label="Locação"
-                        placeholder="#123"
-                    />
-
-                </div>
-
-                <!-- Cliente -->
-                <div class="min-w-[220px]">
-
-                    <AppInput
-                        label="Cliente"
-                        placeholder="Nome do cliente"
-                    />
-
-                </div>
-
-                <!-- Método -->
-                <div class="min-w-[200px]">
-
-                    <label
-                        class="
+        <!-- Método -->
+        <div class="min-w-[200px]">
+          <label
+            class="
                             mb-2
                             block
                             text-sm
                             font-medium
                         "
-                    >
-                        Método
-                    </label>
+          >
+            Método
+          </label>
 
-                    <select
-                        class="
+          <select
+            class="
                             flex
                             h-10
                             w-full
@@ -84,48 +75,44 @@ import {
                             px-3
                             py-2
                         "
-                    >
+          >
+            <option>
+              Todos métodos
+            </option>
 
-                        <option>
-                            Todos métodos
-                        </option>
+            <option>
+              PIX
+            </option>
 
-                        <option>
-                            PIX
-                        </option>
+            <option>
+              Cartão
+            </option>
 
-                        <option>
-                            Cartão
-                        </option>
+            <option>
+              Dinheiro
+            </option>
 
-                        <option>
-                            Dinheiro
-                        </option>
+            <option>
+              Boleto
+            </option>
+          </select>
+        </div>
 
-                        <option>
-                            Boleto
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <!-- Status -->
-                <div class="min-w-[200px]">
-
-                    <label
-                        class="
+        <!-- Status -->
+        <div class="min-w-[200px]">
+          <label
+            class="
                             mb-2
                             block
                             text-sm
                             font-medium
                         "
-                    >
-                        Status
-                    </label>
+          >
+            Status
+          </label>
 
-                    <select
-                        class="
+          <select
+            class="
                             flex
                             h-10
                             w-full
@@ -135,72 +122,59 @@ import {
                             px-3
                             py-2
                         "
-                    >
+          >
+            <option>
+              Todos status
+            </option>
 
-                        <option>
-                            Todos status
-                        </option>
+            <option>
+              Pendente
+            </option>
 
-                        <option>
-                            Pendente
-                        </option>
+            <option>
+              Pago
+            </option>
 
-                        <option>
-                            Pago
-                        </option>
+            <option>
+              Cancelado
+            </option>
+          </select>
+        </div>
 
-                        <option>
-                            Cancelado
-                        </option>
+        <!-- Data inicial -->
+        <div class="min-w-[180px]">
+          <AppInput
+            type="date"
+            label="De"
+          />
+        </div>
 
-                    </select>
+        <!-- Data final -->
+        <div class="min-w-[180px]">
+          <AppInput
+            type="date"
+            label="Até"
+          />
+        </div>
+      </div>
 
-                </div>
-
-                <!-- Data inicial -->
-                <div class="min-w-[180px]">
-
-                    <AppInput
-                        type="date"
-                        label="De"
-                    />
-
-                </div>
-
-                <!-- Data final -->
-                <div class="min-w-[180px]">
-
-                    <AppInput
-                        type="date"
-                        label="Até"
-                    />
-
-                </div>
-
-            </div>
-
-            <!-- Ações -->
-            <div
-                class="
+      <!-- Ações -->
+      <div
+        class="
                     flex
                     gap-2
                 "
-            >
+      >
+        <Button
+          variant="outline"
+        >
+          Limpar
+        </Button>
 
-                <Button
-                    variant="outline"
-                >
-                    Limpar
-                </Button>
-
-                <Button>
-                    Pesquisar
-                </Button>
-
-            </div>
-
-        </CardContent>
-
-    </Card>
-
+        <Button>
+          Pesquisar
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
 </template>

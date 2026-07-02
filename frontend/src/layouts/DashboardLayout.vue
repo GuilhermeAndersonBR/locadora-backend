@@ -10,36 +10,34 @@ const sidebar = useSidebarStore();
 </script>
 
 <template>
-    <div class="flex h-screen">
+  <div class="flex h-screen">
+    <AppSidebar />
 
-        <AppSidebar />
-
-        <div
-            class="
+    <div
+      class="
                 transition-all
                 duration-300
                 flex
                 flex-1
                 flex-col
             "
-            :class="
-                sidebar.collapsed
-                    ? 'ml-20'
-                    : 'ml-64'
-            "
-        >
+      :class="
+        sidebar.collapsed
+          ? 'ml-20'
+          : 'ml-64'
+      "
+    >
+      <AppHeader />
 
-            <AppHeader />
-
-            <main class="
+      <main
+        class="
                 flex-1
                 overflow-auto
                 p-6
-            ">
-                <RouterView />
-            </main>
-
-        </div>
-
+            "
+      >
+        <RouterView />
+      </main>
     </div>
+  </div>
 </template>
