@@ -65,6 +65,8 @@ export default class UserController {
     };
 
     @Route("/admin", Method.POST, [
+        authGuard,
+        roleGuard(UserRole.ADMIN),
         uploadMiddleware("file")
     ])
     @BodySchema(CreateUserRequestSchema)

@@ -68,7 +68,7 @@ export const useAuthStore = defineStore("auth", {
                 "user"
             );
 
-            router.push("/");
+            router.go(0);
 
         }
 
