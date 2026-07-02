@@ -43,7 +43,7 @@ export default abstract class VehicleService {
                     status: vehicle.status,
                     images: images.map(image => ({
                         variant: image.variant,
-                        url: URLService.url(image.url)
+                        url: URLService.url(image.storage_key)
                     }))
                 };
 
@@ -82,7 +82,7 @@ export default abstract class VehicleService {
             status: vehicle.status,
             images: images.map(image => ({
                 variant: image.variant,
-                url: URLService.url(image.url)
+                url: URLService.url(image.storage_key)
             }))
         };
 

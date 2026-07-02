@@ -5,8 +5,6 @@ import { getExecutor } from "../../../../core/config/executor.config.js";
 import { CreateVehicleRequest } from "@locadora/shared/vehicle/request/create-vehicle.schema.js";
 import VehicleStatus from "@locadora/shared/vehicle/types/vehicle-status.type.js";
 import { UpdateVehicleRequest } from "@locadora/shared/vehicle/request/update-vehicle.schema.js";
-import { AllVehiclesResponse } from "@locadora/shared/vehicle/response/all-vehicles.response.js";
-import { GetVehicleResponse } from "@locadora/shared/vehicle/response/get-vehicle.response.js";
 
 export default class VehicleRepository {
 

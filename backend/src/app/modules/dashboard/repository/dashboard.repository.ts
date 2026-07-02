@@ -1,4 +1,4 @@
-import { QueryResult, RowDataPacket } from "mysql2";
+import { RowDataPacket } from "mysql2";
 import { getExecutor } from "../../../../core/config/executor.config.js";
 import { GetVehicleResponse } from "@locadora/shared/vehicle/response/get-vehicle.response.js";
 import { VehicleRow } from "../../vehicle/types/vehicle.row.js";
@@ -49,7 +49,7 @@ export default abstract class DashboardRepository {
             []
         );
 
-        return result[0] ?? null;
+        return result[0] as  unknown as GetVehicleResponse ?? null;
 
     };
 
@@ -77,6 +77,7 @@ export default abstract class DashboardRepository {
             FROM categories c
             LEFT JOIN vehicles v
                 ON v.category_id = c.id
+                WHERE c.deleted_at IS NULL
             GROUP BY c.id, c.name
             ORDER BY total DESC;
             `,

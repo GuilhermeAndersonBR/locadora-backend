@@ -37,6 +37,8 @@ onMounted(async () => {
             url: "/vehicle"
         });
 
+    console.log(result);
+
     if(result?.success) {
 
         vehicles.value =

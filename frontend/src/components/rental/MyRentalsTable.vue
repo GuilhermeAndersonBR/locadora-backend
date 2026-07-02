@@ -75,6 +75,8 @@ async function payRental(
                 payment_method: "CREDIT_CARD"
             },
 
+            toast: true
+
         });
 
     if(result?.success) {

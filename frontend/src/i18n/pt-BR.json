@@ -27,7 +27,7 @@
     "YEAR_TOO_LOW": "Ano deve ser maior que 1900",
     "DAILY_RATE_REQUIRED": "Taxa diária é obrigatória",
     "CATEGORY_ID_REQUIRED": "Categoria é obrigatória",
-
+    "CATEGORY_CREATED_SUCCESSFULLY": "Categoria cadastrada com sucesso",
     "CATEGORIES_FOUND_SUCCESSFULLY": "Categorias encontradas com sucesso",
 
     "VEHICLE_PLATE_ALREADY_EXISTS": "Placa do veículo ja cadastrada",
@@ -41,5 +41,6 @@
     "DAILY_RATE_MUST_BE_POSITIVE": "Taxa diária deve ser maior que zero",
     "DAILY_RATE_MUST_BE_NUMBER": "Taxa diária deve ser um número",
 
-    "RENTAL_CREATED_SUCCESSFULLY": "Veículo alugado com sucesso"
+    "RENTAL_CREATED_SUCCESSFULLY": "Veículo alugado com sucesso",
+    "DESCRIPTION_TOO_SHORT": "Descrição deve ter no mínimo 3 caracteres"
 }

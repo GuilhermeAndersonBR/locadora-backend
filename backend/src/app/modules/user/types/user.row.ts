@@ -1,5 +1,5 @@
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
 import { QueryResult, RowDataPacket } from "mysql2";
-import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 
 export interface UserRow extends RowDataPacket {
 
@@ -11,7 +11,7 @@ export interface UserRow extends RowDataPacket {
 
     password_hash: string;
 
-    role: Role;
+    role: UserRole;
 
     created_at: Date;
 

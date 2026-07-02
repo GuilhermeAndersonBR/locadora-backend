@@ -1,5 +1,4 @@
 import { TypedBody, TypedFileBody } from "../../../../core/types/typed-body.type.js";
-import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 import UserRepository from "../repository/user.repository.js";
 import ConflictError from "../../../../core/errors/conflict.error.js";
 import PasswordService from "../../../../core/services/password.service.js";
@@ -15,6 +14,7 @@ import { UpdateUserRequest } from "@locadora/shared/user/request/update-user.req
 import { UpdateUserPasswordRequest } from "@locadora/shared/user/request/update-password-request.js";
 import { UpdateUserRoleRequest } from "@locadora/shared/user/request/update-role.request.js";
 import { DeleteUserRequest } from "@locadora/shared/user/request/delete-user.request.js";
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
 
 export default class UserService {
 
@@ -30,7 +30,7 @@ export default class UserService {
 
     public static async create(
         data: TypedFileBody<CreateUserRequest> & {
-            role: Role
+            role: UserRole
         }
     ): Promise<CreateUserResponse> {
 

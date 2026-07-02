@@ -1,6 +1,5 @@
 import { ResultSetHeader } from "mysql2";
 import { TypedBody } from "../../../../core/types/typed-body.type.js";
-import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 import { UserRow } from "../types/user.row.js";
 import { getExecutor } from "../../../../core/config/executor.config.js";
 import { CreateUserRequest } from "@locadora/shared/user/request/create-user.request.js";
@@ -8,6 +7,7 @@ import { UpdateUserRequest } from "@locadora/shared/user/request/update-user.req
 import { UpdateUserPasswordRequest } from "@locadora/shared/user/request/update-password-request.js";
 import { UpdateUserRoleRequest } from "@locadora/shared/user/request/update-role.request.js";
 import { DeleteUserRequest } from "@locadora/shared/user/request/delete-user.request.js";
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
 
 export default class UserRepository {
 
@@ -35,7 +35,7 @@ export default class UserRepository {
 
     public static async create(
         data: TypedBody<CreateUserRequest> & {
-            role: Role
+            role: UserRole
         }
     ): Promise<number> {
 

@@ -8,11 +8,11 @@ import VehicleService from "../service/vehicle.service.js";
 import HTTPResponse from "../../../../core/http/httpResponse.js";
 import { authGuard } from "../../../guard/auth.guard.js";
 import roleGuard from "../../../guard/role.guard.js";
-import Role from "../../../../../../shared/src/user/types/user-role.type.js";
 import { CreateVehicleRequest, CreateVehicleRequestSchema } from "@locadora/shared/vehicle/request/create-vehicle.schema.js";
 import { UpdateVehicleRequest, UpdateVehicleRequestSchema } from "@locadora/shared/vehicle/request/update-vehicle.schema.js";
 import { uploadMiddleware } from "../../../../core/middleware/upload.middleware.js";
 import Transaction from "../../../../core/decorators/transaction.decorator.js";
+import UserRole from "@locadora/shared/user/types/user-role.type.js";
 
 @Controller('/vehicle')
 export default class VehicleController {
@@ -55,7 +55,7 @@ export default class VehicleController {
 
     @Route("/", Method.POST, [
         authGuard,
-        roleGuard(Role.ADMIN),
+        roleGuard(UserRole.ADMIN),
         uploadMiddleware("file")
     ])
     @BodySchema(CreateVehicleRequestSchema)
@@ -80,7 +80,7 @@ export default class VehicleController {
 
     @Route("/:id", Method.PUT, [
         authGuard,
-        roleGuard(Role.ADMIN),
+        roleGuard(UserRole.ADMIN),
         uploadMiddleware("file")  
     ])
     @BodySchema(UpdateVehicleRequestSchema)
@@ -105,7 +105,7 @@ export default class VehicleController {
 
     @Route("/:id", Method.DELETE, [
         authGuard,
-        roleGuard(Role.ADMIN)    
+        roleGuard(UserRole.ADMIN)    
     ])
     public async delete(
         request: Request, 
